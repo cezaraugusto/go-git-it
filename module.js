@@ -2,6 +2,7 @@
 const path = require('path')
 
 const shell = require('shelljs')
+const {log} = require('log-md')
 
 function pullSource (branch) {
   // Throw away stderr
@@ -27,10 +28,23 @@ function cloneRemote (outputDirectory, options) {
     // User is in the project root directory, try cloning from `main`
     shell.exec(pullSource('main'))
     // Nothing added on `main`, try the old `master`
-    shell.exec(`[ "$(ls -A .)" ] || ${pullSource('master')}`)
+    const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('master')}`)
     // Nothing added. We need a branch so we exit with error
-    shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
+    const copyExit = shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
     shell.rm('-rf', '.git')
+
+    if (pullExit.code !== 0) {
+      log('Error when trying to pull git data', pullExit.stderr)
+      process.exit(pullExit.code)
+    } else if (copyExit.code !== 0) {
+      log('Error when trying to copy git data', copyExit.stderr)
+      process.exit(copyExit.code)
+    } else {
+      const relativePath = path.relative(process.cwd(), outputDirectory)
+      log(`
+        Success! \`${project}\` downloaded to @ ${relativePath}
+      `)
+    }
   } else {
     const tempDownloadName = '.go-git-it-temp-folder'
 
@@ -40,10 +54,17 @@ function cloneRemote (outputDirectory, options) {
     shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
     shell.exec('git config core.sparsecheckout true')
     shell.exec(`echo "${assetPath}" >> .git/info/sparse-checkout`)
-    shell.exec(`git pull origin --quiet ${branch} --depth 1`)
+    const pullExit = shell.exec(`git pull origin --quiet ${branch} --depth 1`)
     shell.cp('-r', assetPath, outputDirectory)
     shell.cd('../')
     shell.rm('-rf', path.join(outputDirectory, tempDownloadName))
+
+    if (pullExit.code === 0) {
+      const relativePath = path.relative(process.cwd(), outputDirectory)
+      const destinationPath =
+        process.cwd() === outputDirectory ? 'the current path' : relativePath
+      log(`\nSuccess! \`${assetPath}\` downloaded to ${destinationPath}.`)
+    }
   }
 }
 
@@ -53,9 +74,8 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
   const [branch] = repoData.split('/').slice(4)
   const assetPath = repoData.split('/').slice(5).join('/') || project
 
-  console.log(`
-    Downloading ${path.basename(assetPath)} from @${owner}/${project}
-  `)
+  const projectMetadata = `${owner}/${project}`
+  log(`\nDownloading \`${path.basename(assetPath)}\` from @${projectMetadata}`)
 
   const options = { owner, project, branch, assetPath }
 
@@ -67,9 +87,9 @@ if (require.main === module) {
 
   // We need at least one argument to run
   if (args.length < 3) {
-    console.log(
-      'You need to provide a valid GitHub URL to start a download.'
-    )
+    log(`
+      You need to provide a valid GitHub URL to start a download.
+    `)
     process.exit()
   }
 
