@@ -1,0 +1,49 @@
+{
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cezaraugusto/go-git-it.git"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "name": "go-git-it",
+  "version": "0.0.0",
+  "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
+  "bin": "./module.js",
+  "main": "module.js",
+  "author": {
+    "name": "Cezar Augusto",
+    "email": "boss@cezaraugusto.net",
+    "url": "https://cezaraugusto.net"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "files": [
+    "module.js"
+  ],
+  "keywords": [
+    "git",
+    "github",
+    "clone",
+    "subdirectory",
+    "subdirectories",
+    "folder",
+    "folders",
+    "file",
+    "files",
+    "some",
+    "download",
+    "get",
+    "clone",
+    "pull"
+  ],
+  "devDependencies": {
+    "fs-extra": "^9.0.1",
+    "jest": "^26.6.1"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.4"
+  }
+}
