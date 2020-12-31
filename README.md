@@ -11,7 +11,9 @@
 npx go-git-it <url> [outputDir]
 ```
 
-**Sample**
+<img alt="Command line instructions" src="https://user-images.githubusercontent.com/4672033/103392334-0faad500-4afc-11eb-9539-452acec62dce.gif" />
+
+**Use cases**
 
 ```sh
 # cwd is ~/mydevspace/
