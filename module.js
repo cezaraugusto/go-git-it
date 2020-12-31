@@ -13,14 +13,14 @@ function pullSource (branch) {
 function cloneRemote (outputDirectory, options) {
   const { owner, project, branch, assetPath } = options
 
-  shell.mkdir('-p', path.join(outputDirectory, assetPath))
-  shell.cd(path.join(outputDirectory, assetPath))
-  shell.exec('git init --quiet')
-  shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
-
   // An assetPath equal to the project name means
   // user is trying to download a GitHub project from root
   if (assetPath === project) {
+    shell.mkdir('-p', path.join(outputDirectory, assetPath))
+    shell.cd(path.join(outputDirectory, assetPath))
+    shell.exec('git init --quiet')
+    shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
+
     const errorMessage =
       'No default branch found. Add the branch name to the URL and try again.'
 
@@ -32,7 +32,7 @@ function cloneRemote (outputDirectory, options) {
     shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
     shell.rm('-rf', '.git')
   } else {
-    const tempDownloadName = `_${path.basename(assetPath)}`
+    const tempDownloadName = '.go-git-it-temp-folder'
 
     shell.mkdir('-p', path.join(outputDirectory, tempDownloadName))
     shell.cd(path.join(outputDirectory, tempDownloadName))
