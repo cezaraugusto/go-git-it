@@ -43,7 +43,7 @@ describe('git-some', () => {
     test('works with files', async () => {
       goGitIt(fileURL)
 
-      const pathName = path.resolve(process.cwd(), 'create/cli.js')
+      const pathName = path.resolve(process.cwd(), 'cli.js')
 
       expect(await fs.pathExists(pathName)).toBe(true)
     })
@@ -51,7 +51,7 @@ describe('git-some', () => {
     test('using a custom path works with files', async () => {
       goGitIt(fileURL, customPath)
 
-      const pathName = path.resolve(customPath, 'create/cli.js')
+      const pathName = path.resolve(customPath, 'cli.js')
 
       expect(await fs.pathExists(pathName)).toBe(true)
     })
