@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const path = require('path')
+const fs = require('fs')
 
 const shell = require('shelljs')
 const {log} = require('log-md')
@@ -40,10 +41,8 @@ function cloneRemote (outputDirectory, options) {
       log('Error when trying to copy git data', copyExit.stderr)
       process.exit(copyExit.code)
     } else {
-      const relativePath = path.relative(process.cwd(), outputDirectory)
-      log(`
-        Success! \`${project}\` downloaded to @ ${relativePath}
-      `)
+      log('')
+      log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
     }
   } else {
     const tempDownloadName = '.go-git-it-temp-folder'
@@ -60,10 +59,8 @@ function cloneRemote (outputDirectory, options) {
     shell.rm('-rf', path.join(outputDirectory, tempDownloadName))
 
     if (pullExit.code === 0) {
-      const relativePath = path.relative(process.cwd(), outputDirectory)
-      const destinationPath =
-        process.cwd() === outputDirectory ? 'the current path' : relativePath
-      log(`\nSuccess! \`${assetPath}\` downloaded to ${destinationPath}.`)
+      log('')
+      log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
     }
   }
 }
@@ -75,7 +72,8 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
   const assetPath = repoData.split('/').slice(5).join('/') || project
 
   const projectMetadata = `${owner}/${project}`
-  log(`\nDownloading \`${path.basename(assetPath)}\` from @${projectMetadata}`)
+  const donwloadName = path.basename(assetPath)
+  log(`\nDownloading \`${donwloadName}\` from @${projectMetadata}...`)
 
   const options = { owner, project, branch, assetPath }
 
