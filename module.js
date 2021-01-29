@@ -1,12 +1,28 @@
 #!/usr/bin/env node
 const path = require('path')
 
+const shell = require('shelljs')
 const {log} = require('log-md')
 const fullClone = require('./fullClone')
 const sparseClone = require('./sparseClone')
 
 function cloneRemote (outputDirectory, options) {
   const {project, assetPath} = options
+
+  const git = shell.exec('git --version', { silent: true }).stdout
+
+  const [, minor] = git.split('.')
+
+  if (Number(minor) < 30) {
+    log(
+      '\n' +
+      'You are running a git version below \`v2.30.0\`. Download will be slow.'
+    )
+    log(
+      'If performance is key, consider updating git to \`v2.30.0\` or newer.' +
+      '\n'
+    )
+  }
 
   // An assetPath equal to the project name means
   // user is trying to download a GitHub project from root
