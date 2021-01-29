@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 const path = require('path')
-const fs = require('fs')
 
 const shell = require('shelljs')
 const {log} = require('log-md')
+const fetchFullRemote = require('./fetchFullRemote')
 
 function pullSource (branch) {
   // Throw away stderr
-  const noStderr = '2> /dev/null'
+  // const noStderr = '2> /dev/null'
+  const noStderr = ''
 
-  return `git pull origin --quiet ${branch} --depth 1 ${noStderr}`
+  return `git pull origin ${branch} ${noStderr}`
 }
 
 function cloneRemote (outputDirectory, options) {
@@ -18,49 +19,33 @@ function cloneRemote (outputDirectory, options) {
   // An assetPath equal to the project name means
   // user is trying to download a GitHub project from root
   if (assetPath === project) {
-    shell.mkdir('-p', path.join(outputDirectory, assetPath))
-    shell.cd(path.join(outputDirectory, assetPath))
-    shell.exec('git init --quiet')
-    shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
-
-    const errorMessage =
-      'No default branch found. Add the branch name to the URL and try again.'
-
-    // User is in the project root directory, try cloning from `main`
-    shell.exec(pullSource('main'))
-    // Nothing added on `main`, try the old `master`
-    const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('master')}`)
-    // Nothing added. We need a branch so we exit with error
-    const copyExit = shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
-    shell.rm('-rf', '.git')
-
-    if (pullExit.code !== 0) {
-      log('Error when trying to pull git data', pullExit.stderr)
-      process.exit(pullExit.code)
-    } else if (copyExit.code !== 0) {
-      log('Error when trying to copy git data', copyExit.stderr)
-      process.exit(copyExit.code)
-    } else {
-      log('')
-      log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
-    }
+    fetchFullRemote(outputDirectory, options)
   } else {
-    const tempDownloadName = '.go-git-it-temp-folder'
+    log('\n⏬ Downloading files from GitHub. (This might take a while...)')
+    const execSparse = shell
+      .exec('git clone \
+        --depth 1 \
+        --filter=blob:none \
+        --sparse \
+        https://github.com/' + owner + '/' + project
+      )
 
-    shell.mkdir('-p', path.join(outputDirectory, tempDownloadName))
-    shell.cd(path.join(outputDirectory, tempDownloadName))
-    shell.exec('git init --quiet')
-    shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
-    shell.exec('git config core.sparsecheckout true')
-    shell.exec(`echo "${assetPath}" >> .git/info/sparse-checkout`)
-    const pullExit = shell.exec(`git pull origin --quiet ${branch} --depth 1`)
-    shell.cp('-r', assetPath, outputDirectory)
-    shell.cd('../')
-    shell.rm('-rf', path.join(outputDirectory, tempDownloadName))
+    if (execSparse.code === 0) {
+      shell.cd(project)
 
-    if (pullExit.code === 0) {
+      // Download
+      shell.exec('git sparse-checkout init --cone')
+      shell.exec(`git sparse-checkout set ${assetPath}`)
+
+      // Remove original downloaded file.
+      shell.mv(assetPath, outputDirectory)
+      shell.cd(outputDirectory)
+      shell.rm('-rf', project)
+
+      const outputName = path.basename(assetPath)
+      const outputDir = path.jooin(outputDirectory, assetPath)
       log('')
-      log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
+      log(`_Success_! ${outputName} downloaded to \`${outputDir}\`.`)
     }
   }
 }
@@ -72,8 +57,9 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
   const assetPath = repoData.split('/').slice(5).join('/') || project
 
   const projectMetadata = `${owner}/${project}`
-  const donwloadName = path.basename(assetPath)
-  log(`\nDownloading \`${donwloadName}\` from @${projectMetadata}...`)
+  const downloadName = path.basename(assetPath)
+
+  log(`\n⏬ Downloading \`${downloadName}\` from @${projectMetadata}...`)
 
   const options = { owner, project, branch, assetPath }
 
