@@ -1,52 +1,19 @@
 #!/usr/bin/env node
 const path = require('path')
 
-const shell = require('shelljs')
 const {log} = require('log-md')
-const fetchFullRemote = require('./fetchFullRemote')
-
-function pullSource (branch) {
-  // Throw away stderr
-  // const noStderr = '2> /dev/null'
-  const noStderr = ''
-
-  return `git pull origin ${branch} ${noStderr}`
-}
+const fullClone = require('./fullClone')
+const sparseClone = require('./sparseClone')
 
 function cloneRemote (outputDirectory, options) {
-  const { owner, project, branch, assetPath } = options
+  const {project, assetPath} = options
 
   // An assetPath equal to the project name means
   // user is trying to download a GitHub project from root
   if (assetPath === project) {
-    fetchFullRemote(outputDirectory, options)
+    fullClone(outputDirectory, options)
   } else {
-    log('\n⏬ Downloading files from GitHub. (This might take a while...)')
-    const execSparse = shell
-      .exec('git clone \
-        --depth 1 \
-        --filter=blob:none \
-        --sparse \
-        https://github.com/' + owner + '/' + project
-      )
-
-    if (execSparse.code === 0) {
-      shell.cd(project)
-
-      // Download
-      shell.exec('git sparse-checkout init --cone')
-      shell.exec(`git sparse-checkout set ${assetPath}`)
-
-      // Remove original downloaded file.
-      shell.mv(assetPath, outputDirectory)
-      shell.cd(outputDirectory)
-      shell.rm('-rf', project)
-
-      const outputName = path.basename(assetPath)
-      const outputDir = path.jooin(outputDirectory, assetPath)
-      log('')
-      log(`_Success_! ${outputName} downloaded to \`${outputDir}\`.`)
-    }
+    sparseClone(outputDirectory, options)
   }
 }
 
