@@ -25,7 +25,7 @@ describe('git-some', () => {
       expect(await fs.pathExists(pathName)).toBe(true)
     })
 
-    test.skip('using a custom path works with repositories', async () => {
+    test('using a custom path works with repositories', async () => {
       goGitIt(repoURL, customPath)
 
       const pathName = path.resolve(customPath, path.basename(repoURL))
@@ -48,7 +48,7 @@ describe('git-some', () => {
       expect(await fs.pathExists(pathName)).toBe(true)
     })
 
-    test.skip('using a custom path works with files', async () => {
+    test('using a custom path works with files', async () => {
       goGitIt(fileURL, customPath)
 
       const pathName = path.resolve(customPath, 'ci.yml')
@@ -71,7 +71,7 @@ describe('git-some', () => {
       expect(await fs.pathExists(pathName)).toBe(true)
     })
 
-    test.skip('using a custom path works with folders', async () => {
+    test('using a custom path works with folders', async () => {
       goGitIt(folderURL, customPath)
 
       const pathName = path.resolve(customPath, 'workflows')

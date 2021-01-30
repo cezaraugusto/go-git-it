@@ -3,12 +3,12 @@ const {log} = require('log-md')
 
 module.exports = function (outputDirectory, options) {
   const {owner, project} = options
+  const output = outputDirectory === process.cwd() ? '' : outputDirectory
   const execCloneNoSparse = shell
     .exec('git clone \
       --quiet \
       --depth 1 \
-      --no-checkout \
-      https://github.com/' + owner + '/' + project + ' ' + outputDirectory
+      https://github.com/' + owner + '/' + project + ' ' + output
     )
 
   if (execCloneNoSparse.code !== 0) {
