@@ -20,4 +20,4 @@ function cli(goGitIt) {
   }
 }
 
-module.expots = cli
+module.exports = cli
