@@ -22,7 +22,7 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
     branch: urlData.slice(4)[0],
     filePath: urlData.slice(5).join('/')
   }
-console.log('ajkshdkasjhdjkashdkjsahdkashdkashdkjasjkdasjkdhasjkdhasdhaskjdh', remoteInfo.filePath)
+
   // A filePath equal to the project name means
   // user is trying to download a GitHub project from root
   const filePath = remoteInfo.filePath || remoteInfo.project

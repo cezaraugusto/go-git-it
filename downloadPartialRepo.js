@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const shell = require('shelljs')
 
 function downloadPartialRepo (outputDirectory, options) {
@@ -26,10 +27,16 @@ function downloadPartialRepo (outputDirectory, options) {
   // Pull data
   const pullExit = shell.exec(`git pull origin --quiet ${branch} --depth 1`)
 
-  // Move assets to the final output directory
-  shell.cd(filePath)
-  shell.cd('..')
-  shell.mv(path.basename(filePath), outputDirectory)
+  const isDirectory = fs.lstatSync(filePath).isDirectory()
+  // If folder, move assets to the final output directory
+  if (isDirectory) {
+    shell.cd(filePath)
+    shell.cd('..')
+    shell.mv(path.basename(filePath), outputDirectory)
+  // Otherwise just move the file as-is
+  } else {
+    shell.mv(filePath, outputDirectory)
+  }
 
   // Go back to root directory so we can delete the temp folder
   shell.cd(outputDirectory)
@@ -38,8 +45,11 @@ function downloadPartialRepo (outputDirectory, options) {
   shell.rm('-rf', path.join(outputDirectory, tempDownloadName))
 
   if (pullExit.code === 0) {
-    console.log('')
-    console.log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
+    const asset = path.basename(filePath)
+    const assetType = isDirectory ? 'Folder' : 'File'
+    console.log(`
+Success! ${assetType} \`${asset}\` downloaded to \`${outputDirectory}\`.
+    `)
   }
 }
 
