@@ -11,6 +11,11 @@ const folderURL = 'https://github.com/cezaraugusto/extension-create/tree/main/cr
 const fileURL = 'https://github.com/cezaraugusto/extension-create/tree/main/create/cli.js'
 const customPath = path.resolve(__dirname, 'some/extraordinary/folder')
 
+// Disable console.logs as we don't care about them
+for (let func in console) {
+  console[func] = function() {};
+}
+
 describe('git-some', () => {
   describe('working with directories', () => {
     afterEach(() => {

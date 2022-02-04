@@ -1,4 +1,4 @@
-function cli (goGitIt) {
+function cli(goGitIt) {
   const args = process.argv
 
   // CLI needs at least one argument to run
@@ -22,4 +22,4 @@ function cli (goGitIt) {
   }
 }
 
-module.exports = cli
+module.expots = cli

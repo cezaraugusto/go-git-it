@@ -1,3 +1,4 @@
+const path = require('path')
 const shell = require('shelljs')
 
 function pullSource (branch) {
@@ -7,9 +8,10 @@ function pullSource (branch) {
   return `git pull origin --quiet ${branch} --depth 1 ${noStderr}`
 }
 
-function downloadMainRepo (projectDir, {owner, project}) {
-  shell.mkdir('-p', projectDir)
-  shell.cd(projectDir)
+function downloadMainRepo (outputDirectory, options) {
+  const {owner, project} = options
+  shell.mkdir('-p', path.join(outputDirectory, project))
+  shell.cd(path.join(outputDirectory, project))
   shell.exec('git init --quiet')
   shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
 
