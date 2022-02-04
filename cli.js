@@ -3,9 +3,7 @@ function cli(goGitIt) {
 
   // CLI needs at least one argument to run
   if (args.length < 3) {
-    console.log(`
-      You need to provide a valid GitHub URL to start a download.
-    `)
+    console.log('You need to provide a valid GitHub URL to start a download.')
     process.exit()
   }
 
