@@ -40,7 +40,7 @@ function cloneRemote (outputDirectory, options) {
       process.exit(copyExit.code)
     } else {
       log('')
-      log(`_Success_! ${project} downloaded to \`${outputDirectory}\`.`)
+      log(`_Success_! \`${project}\` downloaded to \`${outputDirectory}\`.`)
     }
   } else {
     // Here is the actual magic. Usd sparse checkout to grab
@@ -83,7 +83,7 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
 
   const projectMetadata = `${owner}/${project}`
   const donwloadName = path.basename(assetPath)
-  log(`\nDownloading \`${donwloadName}\` from @${projectMetadata}...`)
+  log(`\nDownloading \`${donwloadName}\` from \`@${projectMetadata}\`...`)
 
   const options = { owner, project, branch, assetPath }
 
