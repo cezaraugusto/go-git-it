@@ -23,9 +23,9 @@
   },
   "files": [
     "module.js",
-    "cli",
-    "downloadMainRepo",
-    "downloadPartialRepo"
+    "cli.js",
+    "downloadMainRepo.js",
+    "downloadPartialRepo.js"
   ],
   "keywords": [
     "git",
