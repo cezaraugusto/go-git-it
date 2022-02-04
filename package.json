@@ -22,7 +22,10 @@
     "test": "jest"
   },
   "files": [
-    "module.js"
+    "module.js",
+    "cli",
+    "downloadMainRepo",
+    "downloadPartialRepo"
   ],
   "keywords": [
     "git",
