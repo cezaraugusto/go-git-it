@@ -14,7 +14,7 @@ function cloneRemote (outputDirectory, options) {
   }
 }
 
-function goGitIt (gitURL, outputDirectory = process.cwd()) {
+function goGitIt (gitURL, outputDirectory) {
   const urlData = new URL(gitURL).pathname.split('/')
   const remoteInfo = {
     owner: urlData.slice(1, 3)[0],
@@ -32,7 +32,10 @@ function goGitIt (gitURL, outputDirectory = process.cwd()) {
   const projectInfo = `${remoteInfo.owner}/${remoteInfo.project}`
   console.log(`\nDownloading \`${projectName}\` from \`@${projectInfo}\`...`)
 
-  cloneRemote(outputDirectory, {...remoteInfo, filePath, isMainRepo})
+  // Output directory defaults to working directory
+  const outDir = outputDirectory || process.cwd()
+
+  cloneRemote(outDir, {...remoteInfo, filePath, isMainRepo})
 }
 
 // Execute CLI if requested
