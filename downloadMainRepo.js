@@ -1,12 +1,6 @@
 const path = require('path')
 const shell = require('shelljs')
-
-function pullSource (branch) {
-  // Throw away stderr
-  const noStderr = '2> /dev/null'
-
-  return `git pull origin --quiet ${branch} --depth 1 ${noStderr}`
-}
+const pullSource = require('./pullSource')
 
 function downloadMainRepo (outputDirectory, options) {
   const {owner, project} = options
@@ -15,7 +9,7 @@ function downloadMainRepo (outputDirectory, options) {
   shell.exec('git init --quiet')
   shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
 
-  // User is in the project root directory, try cloning from `main`
+  // User is in the project root directory, try pulling from `main`
   shell.exec(pullSource('main'))
 
   // Nothing added on `main`, try the old `master`
@@ -23,7 +17,7 @@ function downloadMainRepo (outputDirectory, options) {
 
   // Nothing added. We need a branch so we exit with error
   const errorMessage =
-    'No default branch found. Add the branch name to the URL and try again.'
+    'No default branch found. Ensure you are pulling from `main` or `master` branch.'
 
   const copyExit = shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
 
