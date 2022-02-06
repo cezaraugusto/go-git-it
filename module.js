@@ -3,6 +3,7 @@ const path = require('path')
 const downloadMainRepo = require('./downloadMainRepo')
 const downloadPartialRepo = require('./downloadPartialRepo')
 const cli = require('./cli')
+const getData = require('./getData')
 
 function cloneRemote (outputDirectory, options) {
   const { isMainRepo } = options
@@ -17,16 +18,15 @@ function cloneRemote (outputDirectory, options) {
 function goGitIt (gitURL, outputDirectory) {
   const urlData = new URL(gitURL).pathname.split('/')
   const remoteInfo = {
-    owner: urlData.slice(1, 3)[0],
-    project: urlData.slice(1, 3)[1],
-    branch: urlData.slice(4)[0],
-    filePath: urlData.slice(3)[0],
+    owner: getData.getOwner(urlData),
+    project: getData.getProject(urlData),
+    filePath: getData.getFilePath(urlData),
+    branch: getData.getBranch(urlData),
   }
 
   // A filePath equal to the project name means
   // user is trying to download a GitHub project from root
   const filePath = remoteInfo.filePath || remoteInfo.project
-  console.log({branch: urlData})
   const isMainRepo = filePath === remoteInfo.project
 
   const projectName = path.basename(filePath)
