@@ -22,7 +22,6 @@ function getBranch (urlData) {
   const branch = urlData.findIndex(data => data === 'tree')
 
   if (branch !== NO_BRANCH_FOUND) {
-    console.log('branch', urlData[4])
     return urlData[4]
   }
 
