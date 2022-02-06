@@ -25,7 +25,9 @@ function downloadPartialRepo (outputDirectory, options) {
   const sparsePath = filePath.includes('.') ? filePath : `${filePath}/*`;
 
   // Write to git the asset path user is trying to download
-  shell.exec(`echo "${sparsePath}" >> .git/info/sparse-checkout`)
+  if (process.platform !== "win32") {
+    shell.exec(`echo "${sparsePath}" >> .git/info/sparse-checkout`)
+  }
 
   // Pull data
   const pullExit = shell.exec(`git pull origin --quiet ${branch} --depth 1`)
