@@ -20,12 +20,13 @@ function goGitIt (gitURL, outputDirectory) {
     owner: urlData.slice(1, 3)[0],
     project: urlData.slice(1, 3)[1],
     branch: urlData.slice(4)[0],
-    filePath: urlData.slice(5).join('/')
+    filePath: urlData.slice(3)[0],
   }
 
   // A filePath equal to the project name means
   // user is trying to download a GitHub project from root
   const filePath = remoteInfo.filePath || remoteInfo.project
+  console.log({branch: urlData})
   const isMainRepo = filePath === remoteInfo.project
 
   const projectName = path.basename(filePath)

@@ -18,7 +18,7 @@
     "url": "https://cezaraugusto.net"
   },
   "scripts": {
-    "go-git-it": "node ./module.js",
+    "start": "node ./module.js",
     "test": "jest"
   },
   "files": [
