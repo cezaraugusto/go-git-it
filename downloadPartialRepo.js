@@ -27,18 +27,16 @@ function downloadPartialRepo (outputDirectory, options) {
   const sparsePath = filePath.includes('.') ? filePath : `${filePath}/*`;
 
   // Write to git the asset path user is trying to download
-  if (process.platform !== "win32") {
-    shell.exec(`echo "${sparsePath}" >> .git/info/sparse-checkout`)
-  }
+  shell.exec(`echo ${sparsePath} >> .git/info/sparse-checkout`)
 
   // User is in the project root directory, try pulling from `main`
   shell.exec(pullSource(branch))
 
   // Nothing added on `main`, try the old `master`
-  const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('main')} || ${pullSource('master')}`)
+  const pullExit = shell.exec(pullSource(branch))
 
   const isDirectory = fs.lstatSync(filePath).isDirectory()
-console.log({filePath, outputDirectory})
+
   // If folder, move assets to the final output directory
   if (isDirectory) {
     shell.mv(filePath, '..')
