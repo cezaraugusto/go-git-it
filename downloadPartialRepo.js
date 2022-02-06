@@ -21,8 +21,11 @@ function downloadPartialRepo (outputDirectory, options) {
   shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
   shell.exec('git config core.sparsecheckout true')
 
-  // Write to git the asset path user is trying to downnload
-  shell.exec(`echo "${filePath}" >> .git/info/sparse-checkout`)
+  // Assume a dot in the filePath means a file and not a folder
+  const sparsePath = filePath.includes('.') ? filePath : `${filePath}/*`;
+
+  // Write to git the asset path user is trying to download
+  shell.exec(`echo "${sparsePath}" >> .git/info/sparse-checkout`)
 
   // Pull data
   const pullExit = shell.exec(`git pull origin --quiet ${branch} --depth 1`)
