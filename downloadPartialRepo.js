@@ -4,7 +4,7 @@ const shell = require('shelljs')
 const pullSource = require('./pullSource')
 
 function downloadPartialRepo (outputDirectory, options) {
-  const {owner, project, filePath} = options
+  const {owner, project, filePath, branch} = options
 
   // Use sparse checkout to grab contents of a specific folders
   const tempDownloadName = '.go-git-it-temp-folder'
@@ -32,10 +32,10 @@ function downloadPartialRepo (outputDirectory, options) {
   }
 
   // User is in the project root directory, try pulling from `main`
-  shell.exec(pullSource('main'))
+  shell.exec(pullSource(branch))
 
   // Nothing added on `main`, try the old `master`
-  const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('master')}`)
+  const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('main')} || ${pullSource('master')}`)
 
   const isDirectory = fs.lstatSync(filePath).isDirectory()
 console.log({filePath, outputDirectory})
@@ -57,8 +57,9 @@ console.log({filePath, outputDirectory})
   if (pullExit.code !== 0) {
   // Nothing added. We need a branch so we exit with error
   const errorMessage =
-    'No default branch found. Ensure you are pulling from `main`' +
-    'or `master` branch. go-git-it does not support custom branches yet.\n' +
+    'No branch found. Ensure the remote branch you are pulling exists.\n' +
+    'If you think this is a bug, please report to' +
+    'https://github.com/cezaraugusto/go-git-it/issues.\n' +
     'Error: ' + pullExit.stderr
 
     console.log(errorMessage)
