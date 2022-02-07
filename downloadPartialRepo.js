@@ -38,15 +38,8 @@ function downloadPartialRepo (outputDirectory, options) {
   // Nothing added on `main`, try the old `master`
   const pullExit = shell.exec(pullSource(branch))
 
-  const isDirectory = fs.lstatSync(filePath).isDirectory()
-
-  // If folder, move assets to the final output directory
-  if (isDirectory) {
-    shell.mv(filePath, '..')
-  // Otherwise just move the file as-is
-  } else {
-    shell.mv(filePath, outputDirectory)
-  }
+  // Move assets to the final output directory
+  shell.mv(filePath, '..')
 
   // Go back to root directory so we can delete the temp folder
   shell.cd('..')
@@ -67,10 +60,13 @@ function downloadPartialRepo (outputDirectory, options) {
     process.exit(pullExit.code)
   // All good, project downloaded
   } else {
-    const asset = path.basename(filePath)
+    const filePathArray = filePath.split('/')
+    const asset = filePathArray[filePathArray.length - 1]
+    const isDirectory = fs.lstatSync(asset).isDirectory()
     const assetType = isDirectory ? 'Folder' : 'File'
+
     console.log(`
-Success! ${assetType} \`${asset}\` downloaded to \`${outputDirectory}\`.
+\nSuccess! ${assetType} \`${asset}\` downloaded to \`${outputDirectory}\`.
     `)
   }
 }
