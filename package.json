@@ -25,7 +25,9 @@
     "module.js",
     "cli.js",
     "downloadMainRepo.js",
-    "downloadPartialRepo.js"
+    "downloadPartialRepo.js",
+    "getData.js",
+    "pullSource.js"
   ],
   "keywords": [
     "git",
