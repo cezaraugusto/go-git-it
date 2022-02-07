@@ -24,7 +24,10 @@ function downloadPartialRepo (outputDirectory, options) {
   shell.exec('git config core.sparsecheckout true')
 
   // Assume a dot in the filePath means a file and not a folder
-  const sparsePath = filePath.includes('.') ? filePath : `${filePath}/*`;
+  const isFile = filePath
+    .split('/')[filePath.split('/').length - 1].includes('.')
+
+  const sparsePath = isFile ? filePath : `${filePath}/*`;
 
   // Write to git the asset path user is trying to download
   shell.exec(`echo ${sparsePath} >> .git/info/sparse-checkout`)
