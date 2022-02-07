@@ -31,7 +31,7 @@ function goGitIt (gitURL, outputDirectory) {
 
   const projectName = path.basename(filePath)
   const projectInfo = `${remoteInfo.owner}/${remoteInfo.project}`
-  console.log(`\nDownloading \`${projectName}\` from \`@${projectInfo}\`...`)
+  console.log(`Downloading \`${projectName}\` from \`@${projectInfo}\`...`)
 
   // Output directory defaults to working directory
   const outDir = outputDirectory || process.cwd()
