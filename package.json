@@ -5,14 +5,17 @@
     "url": "https://github.com/cezaraugusto/go-git-it.git"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "name": "go-git-it",
   "version": "1.0.0",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
-  "bin": "./module.js",
+  "bin": "./dist/cli.js",
   "main": "./dist/module.js",
   "types": "./dist/module.d.ts",
+  "files": [
+    "dist"
+  ],
   "author": {
     "name": "Cezar Augusto",
     "email": "boss@cezaraugusto.net",
@@ -46,7 +49,7 @@
     "@types/shelljs": "^0.8.12",
     "fs-extra": "^10.0.0",
     "jest": "^27.4.7",
-    "tsup": "^6.7.0"
+    "tsup": "^7.1.0"
   },
   "dependencies": {
     "shelljs": "^0.8.5"
