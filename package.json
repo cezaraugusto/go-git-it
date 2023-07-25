@@ -44,9 +44,8 @@
     "pull"
   ],
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-extension-create": "*",
     "@types/shelljs": "^0.8.12",
+    "eslint": "^7.32.0",
     "fs-extra": "^10.0.0",
     "jest": "^27.4.7",
     "tsup": "^7.1.0"
