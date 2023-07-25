@@ -11,24 +11,19 @@
   "version": "1.0.0",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
   "bin": "./module.js",
-  "main": "module.js",
+  "main": "./dist/module.js",
+  "types": "./dist/module.d.ts",
   "author": {
     "name": "Cezar Augusto",
     "email": "boss@cezaraugusto.net",
-    "url": "https://cezaraugusto.net"
+    "url": "https://cezaraugusto.com"
   },
   "scripts": {
-    "start": "node ./module.js",
-    "test": "jest"
+    "watch": "yarn compile --watch",
+    "compile": "tsup-node ./module.ts --format cjs --dts --target=node16",
+    "test": "jest",
+    "lint": "eslint \"./**/*.ts*\""
   },
-  "files": [
-    "module.js",
-    "cli.js",
-    "downloadMainRepo.js",
-    "downloadPartialRepo.js",
-    "getData.js",
-    "pullSource.js"
-  ],
   "keywords": [
     "git",
     "github",
@@ -46,8 +41,12 @@
     "pull"
   ],
   "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-extension-create": "*",
+    "@types/shelljs": "^0.8.12",
     "fs-extra": "^10.0.0",
-    "jest": "^27.4.7"
+    "jest": "^27.4.7",
+    "tsup": "^6.7.0"
   },
   "dependencies": {
     "shelljs": "^0.8.5"

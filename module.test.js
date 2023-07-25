@@ -1,22 +1,23 @@
 /* global describe, afterEach, test, expect */
 const path = require('path')
-
 const fs = require('fs-extra')
 const shell = require('shelljs')
 
-const goGitIt = require('./module')
+const goGitIt = require('./dist/module').default
 
 const repoURL = 'https://github.com/cezaraugusto/extension-create'
-const folderURL = 'https://github.com/cezaraugusto/extension-create/tree/main/create'
-const fileURL = 'https://github.com/cezaraugusto/extension-create/tree/main/create/cli.js'
+const folderURL =
+  'https://github.com/cezaraugusto/extension-create/tree/main/create'
+const fileURL =
+  'https://github.com/cezaraugusto/extension-create/tree/main/create/cli.js'
 const customPath = path.resolve(__dirname, 'some/extraordinary/folder')
 
 // Disable console.logs as we don't care about them
-for (let func in console) {
-  console[func] = function() {};
+for (const func in console) {
+  console[func] = function () {}
 }
 
-describe('git-some', () => {
+describe('go-git-it', () => {
   describe('working with directories', () => {
     afterEach(() => {
       shell.rm('-rf', path.resolve(__dirname, path.basename(repoURL)))
