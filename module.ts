@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-import path from 'path'
+import {blue, underline} from '@colors/colors/safe'
+
 import downloadMainRepo from './downloadMainRepo'
 import downloadPartialRepo from './downloadPartialRepo'
 import cli from './cli'
-import * as getData from './getData'
 
-function cloneRemote(
+import * as getData from './getData'
+import addProgressBar from './addProgressBar'
+
+async function cloneRemote(
   outputDirectory: string,
   options: {
     filePath: string
@@ -18,13 +21,17 @@ function cloneRemote(
   const {owner, project, isMainRepo} = options
 
   if (isMainRepo) {
-    downloadMainRepo(outputDirectory, {owner, project})
+    await downloadMainRepo(outputDirectory, {owner, project})
   } else {
-    downloadPartialRepo(outputDirectory, options)
+    await downloadPartialRepo(outputDirectory, options)
   }
 }
 
-function goGitIt(gitURL: string, outputDirectory?: string) {
+async function goGitIt(
+  gitURL: string,
+  outputDirectory?: string,
+  text?: string
+) {
   const urlData = new URL(gitURL).pathname.split('/')
   const remoteInfo = {
     owner: getData.getOwner(urlData),
@@ -33,19 +40,24 @@ function goGitIt(gitURL: string, outputDirectory?: string) {
     branch: getData.getBranch(urlData)
   }
 
-  // A filePath equal to the project name means
-  // user is trying to download a GitHub project from root
   const filePath = remoteInfo.filePath || remoteInfo.project
   const isMainRepo = filePath === remoteInfo.project
 
-  const projectName = path.basename(filePath)
-  const projectInfo = `${remoteInfo.owner}/${remoteInfo.project}`
-  console.log(`Downloading \`${projectName}\` from \`@${projectInfo}\`...`)
-
   // Output directory defaults to working directory
   const outDir = outputDirectory || process.cwd()
+  const remoteSource = `@${remoteInfo.owner}/${remoteInfo.project}`
+  await addProgressBar(
+    text || `Downloading...${blue(filePath)} from ${remoteSource}`,
+    async () => {
+      await cloneRemote(outDir, {...remoteInfo, filePath, isMainRepo})
+    }
+  )
 
-  cloneRemote(outDir, {...remoteInfo, filePath, isMainRepo})
+  if (!text) {
+    console.log(
+      `\nSuccess! ${blue(filePath)} downloaded to ${underline(outDir + '/' + filePath)}`
+    )
+  }
 }
 
 // Execute CLI if requested

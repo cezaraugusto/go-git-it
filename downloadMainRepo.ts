@@ -1,50 +1,49 @@
 import path from 'path'
+import util from 'util'
 import shell from 'shelljs'
 import pullSource from './pullSource'
+
+const exec = util.promisify(shell.exec)
 
 interface DownloadMainRepo {
   owner: string
   project: string
 }
 
-export default function downloadMainRepo(
+export default async function downloadMainRepo(
   outputDirectory: string,
-  options: DownloadMainRepo
+  {owner, project}: DownloadMainRepo
 ) {
-  const {owner, project} = options
-  shell.mkdir('-p', path.join(outputDirectory, project))
-  shell.cd(path.join(outputDirectory, project))
-  shell.exec('git init --quiet')
-  shell.exec(`git remote add origin https://github.com/${owner}/${project}`)
+  const projectPath = path.join(outputDirectory, project)
+  shell.mkdir('-p', projectPath)
+  shell.cd(projectPath)
+  await exec('git init --quiet')
+  await exec(`git remote add origin https://github.com/${owner}/${project}`)
 
-  // User is in the project root directory, try pulling from `main`
-  shell.exec(pullSource('main'))
+  // Try to pull from 'main' first, then fallback to 'master'
+  const branches = ['main', 'master']
+  let success = false
 
-  // Nothing added on `main`, try the old `master`
-  const pullExit = shell.exec(`[ "$(ls -A .)" ] || ${pullSource('master')}`)
-
-  // Nothing added. We need a branch so we exit with error
-  const errorMessage =
-    'No default branch found. Ensure you are pulling from `main` or `master` branch.'
-
-  const copyExit = shell.exec(`[ "$(ls -A .)" ] || echo ${errorMessage}`)
-
-  // Remove the git folder as we don't need it
-  shell.rm('-rf', '.git')
-
-  // Git data pull failed
-  if (pullExit.code !== 0) {
-    console.log('Error when trying to pull git data', pullExit.stderr)
-    process.exit(pullExit.code)
-
-    // The attempt to copy files failed
-  } else if (copyExit.code !== 0) {
-    console.log('Error when trying to copy git data', copyExit.stderr)
-    process.exit(copyExit.code)
-
-    // All good, project downloaded
-  } else {
-    console.log('')
-    console.log(`Success! \`${project}\` downloaded to \`${outputDirectory}\`.`)
+  for (const branch of branches) {
+    try {
+      await exec(pullSource(branch))
+      success = true
+      console.log(`Successfully pulled from branch '${branch}'.`)
+      break // Exit the loop on success
+    } catch (error) {
+      console.log(
+        `Failed to pull using branch '${branch}'. Trying next option...`
+      )
+    }
   }
+
+  if (!success) {
+    console.error(
+      'Error: Could not determine the default branch or failed to pull from it.'
+    )
+    process.exit(1)
+  }
+
+  // Clean up .git directory
+  shell.rm('-rf', '.git')
 }

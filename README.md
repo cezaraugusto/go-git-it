@@ -75,7 +75,7 @@ goGitIt('https://github.com/username/repository', 'path/to/outputDir')
 
 ### API
 
-#### goGitIt(url, outputDir?)
+#### goGitIt(url, outputDir?, text?)
 
 ##### url
 
@@ -87,7 +87,13 @@ The URL to the path you want to download. If a folder, will download its content
 
 Type: `string`
 
-Custom path to the outputDir (defaults to the working directorya)
+Custom path to the outputDir (defaults to the working directory)
+
+##### text
+
+Type: `string`
+
+Adds a custom text message instead of default config. This option overrides the success message as well.
 
 ## License
 
