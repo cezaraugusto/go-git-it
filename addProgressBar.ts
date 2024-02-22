@@ -1,11 +1,11 @@
 // @ts-ignore
 import ProgressBar from 'progress'
 
-export default function addProgressBar(
+export default async function addProgressBar(
   text: string,
   completionCallback: () => Promise<void>
 ): Promise<void> {
-  return new Promise<void>(async (resolve, reject) => {
+  await new Promise<void>(async (resolve, reject) => {
     const contentLength = 2048 * 1024 // 2MB
     const bar = new ProgressBar(`${text} [:bar] :percent :etas`, {
       complete: '=',

@@ -1,4 +1,4 @@
-type GoGitIt = (gitURL: string, outputDirectory?: string) => void
+type GoGitIt = (gitURL: string, outputDirectory?: string) => Promise<void>
 
 export default function cli(goGitIt: GoGitIt) {
   const args = process.argv
