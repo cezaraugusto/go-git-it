@@ -5,11 +5,11 @@ const shell = require('shelljs')
 
 const goGitIt = require('./dist/module').default
 
-const repoURL = 'https://github.com/cezaraugusto/extension-create'
+const repoURL = 'https://github.com/cezaraugusto/go-git-it'
 const folderURL =
-  'https://github.com/cezaraugusto/extension-create/tree/main/packages'
+  'https://github.com/cezaraugusto/go-git-it/tree/main/.github/workflows'
 const fileURL =
-  'https://github.com/cezaraugusto/extension-create/tree/main/package.json'
+  'https://github.com/cezaraugusto/go-git-it/tree/main/package.json'
 const customPath = path.resolve(__dirname, 'some/extraordinary/folder')
 
 describe('go-git-it', () => {
@@ -60,14 +60,14 @@ describe('go-git-it', () => {
 
   describe('working with partial URLs (basename is folder)', () => {
     afterEach(() => {
-      shell.rm('-rf', path.resolve(__dirname, 'packages'))
+      shell.rm('-rf', path.resolve(__dirname, 'workflows'))
       shell.rm('-rf', path.resolve(__dirname, 'some'))
     })
 
     test('works with default path', async () => {
       await goGitIt(folderURL)
 
-      const pathName = path.resolve(process.cwd(), 'packages')
+      const pathName = path.resolve(process.cwd(), 'workflows')
 
       expect(await fs.pathExists(pathName)).toBe(true)
     })
@@ -75,7 +75,7 @@ describe('go-git-it', () => {
     test('works with a custom path', async () => {
       await goGitIt(folderURL, customPath)
 
-      const pathName = path.resolve(customPath, 'packages')
+      const pathName = path.resolve(customPath, 'workflows')
 
       expect(await fs.pathExists(pathName)).toBe(true)
     })
