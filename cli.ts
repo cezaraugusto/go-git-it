@@ -14,12 +14,10 @@ export default function cli(goGitIt: GoGitIt) {
   // Execute CLI with one argument
   if (args.length === 3) {
     goGitIt(args[args.length - 1]);
-    process.exit();
   }
 
   // Execute CLI with two argument
   if (args.length === 4) {
     goGitIt(args[args.length - 2], args[args.length - 1]);
-    process.exit();
   }
 }
