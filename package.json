@@ -10,7 +10,9 @@
   "name": "go-git-it",
   "version": "1.2.4-0",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
-  "bin": "./dist/cli.js",
+  "bin": {
+    "go-git-it": "./dist/cli.js"
+  },
   "main": "./dist/module.js",
   "types": "./dist/module.d.ts",
   "files": [
