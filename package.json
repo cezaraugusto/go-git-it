@@ -11,7 +11,7 @@
   "version": "1.2.4-1",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
   "bin": {
-    "go-git-it": "./dist/cli.js"
+    "go-git-it": "./dist/module.js"
   },
   "main": "./dist/module.js",
   "types": "./dist/module.d.ts",

@@ -9,7 +9,7 @@ function getProject(urlData: string[]) {
 }
 
 function getFilePath(urlData: string[]) {
-  const branch = urlData.findIndex((data) => data === "tree");
+  const branch = urlData.findIndex((data) => data === "blob");
 
   if (branch !== NO_BRANCH_FOUND) {
     return urlData.slice(5).join("/");
@@ -19,7 +19,7 @@ function getFilePath(urlData: string[]) {
 }
 
 function getBranch(urlData: string[]) {
-  const branch = urlData.findIndex((data) => data === "tree");
+  const branch = urlData.findIndex((data) => data === "blob");
 
   if (branch !== NO_BRANCH_FOUND) {
     return urlData[4];
