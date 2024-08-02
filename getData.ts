@@ -1,28 +1,32 @@
 const NO_BRANCH_FOUND = -1;
 
 function getOwner(urlData: string[]) {
-  return urlData.slice(1, 3)[0];
+  return urlData[1];
 }
 
 function getProject(urlData: string[]) {
-  return urlData.slice(1, 3)[1];
+  return urlData[2];
 }
 
 function getFilePath(urlData: string[]) {
-  const branch = urlData.findIndex((data) => data === "blob");
+  const branchIndex = urlData.findIndex(
+    (data) => data === "blob" || data === "tree"
+  );
 
-  if (branch !== NO_BRANCH_FOUND) {
-    return urlData.slice(5).join("/");
+  if (branchIndex !== NO_BRANCH_FOUND) {
+    return urlData.slice(branchIndex + 2).join("/");
   }
 
   return urlData.slice(3).join("/");
 }
 
 function getBranch(urlData: string[]) {
-  const branch = urlData.findIndex((data) => data === "blob");
+  const branchIndex = urlData.findIndex(
+    (data) => data === "blob" || data === "tree"
+  );
 
-  if (branch !== NO_BRANCH_FOUND) {
-    return urlData[4];
+  if (branchIndex !== NO_BRANCH_FOUND) {
+    return urlData[branchIndex + 1];
   }
 
   // Assume 'main'
