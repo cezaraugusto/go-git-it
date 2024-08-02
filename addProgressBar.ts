@@ -7,7 +7,9 @@ export default async function addProgressBar(
 ): Promise<void> {
   await new Promise<void>(async (resolve, reject) => {
     const contentLength = 2048 * 1024; // 2MB
-    const bar = new ProgressBar(`${text} [:bar] :percent :etas`, {
+    console.log('\n' + text + '\n')
+
+    const bar = new ProgressBar(`[:bar] :percent :etas`, {
       complete: "=",
       incomplete: " ",
       width: 50,

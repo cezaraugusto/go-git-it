@@ -55,9 +55,7 @@ async function goGitIt(
 
   if (!text) {
     console.log(
-      `\nSuccess! Data from ${yellow(filePath)} downloaded to ${underline(
-        outDir + "/" + filePath
-      )}`
+      `\nSuccess! Data downloaded to ${underline(outDir + "/" + filePath)}`
     );
   }
 }
