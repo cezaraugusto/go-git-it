@@ -1,9 +1,11 @@
 import path from "path";
+import fs from "fs";
+import { exec as execCallback } from "child_process";
 import util from "util";
-import shell from "shelljs";
 import pullSource from "./pullSource";
 
-const exec = util.promisify(shell.exec);
+const exec = util.promisify(execCallback);
+const mkdir = util.promisify(fs.mkdir);
 
 interface DownloadMainRepo {
   owner: string;
@@ -15,8 +17,10 @@ export default async function downloadMainRepo(
   { owner, project }: DownloadMainRepo
 ) {
   const projectPath = path.join(outputDirectory, project);
-  shell.mkdir("-p", projectPath);
-  shell.cd(projectPath);
+
+  await mkdir(projectPath, { recursive: true });
+  process.chdir(projectPath);
+
   await exec("git init --quiet");
   await exec(`git remote add origin https://github.com/${owner}/${project}`);
 
@@ -45,5 +49,5 @@ export default async function downloadMainRepo(
   }
 
   // Clean up .git directory
-  shell.rm("-rf", ".git");
+  await exec(`rm -rf .git`);
 }
