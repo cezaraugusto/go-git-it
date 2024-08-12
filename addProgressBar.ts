@@ -2,12 +2,14 @@
 import ProgressBar from "progress";
 
 export default async function addProgressBar(
-  text: string,
+  text: string | undefined,
   completionCallback: () => Promise<void>
 ): Promise<void> {
   await new Promise<void>(async (resolve, reject) => {
     const contentLength = 2048 * 1024; // 2MB
-    console.log('\n' + text + '\n')
+    if (text) {
+      console.log(text)
+    }
 
     const bar = new ProgressBar(`[:bar] :percent :etas`, {
       complete: "=",
