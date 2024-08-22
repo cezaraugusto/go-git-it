@@ -56,7 +56,7 @@ async function goGitIt(
 
   if (!text) {
     console.log(
-      `\nSuccess! Data downloaded to ${underline(outDir + "/" + filePath)}`
+      `Success! Data downloaded to ${underline(outDir + "/" + filePath)}`
     );
   }
 }
