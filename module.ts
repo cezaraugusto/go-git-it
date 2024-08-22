@@ -16,6 +16,7 @@ async function cloneRemote(
     owner: string;
     project: string;
     isMainRepo: boolean;
+    branch: string;
   }
 ) {
   const { owner, project, isMainRepo } = options;
