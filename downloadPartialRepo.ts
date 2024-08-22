@@ -10,7 +10,12 @@ const writeFile = util.promisify(fs.writeFile);
 
 export default async function downloadPartialRepo(
   outputDirectory: string,
-  { owner, project, filePath, branch }: any
+  {
+    owner,
+    project,
+    filePath,
+    branch,
+  }: { owner: string; project: string; filePath: string; branch: string }
 ) {
   const tempDownloadName = ".go-git-it-temp-folder";
   const tempDownloadPath = path.join(outputDirectory, tempDownloadName);
@@ -23,18 +28,19 @@ export default async function downloadPartialRepo(
 
   await exec("git config core.sparseCheckout true");
 
-  const isFile = filePath.includes(".");
+  const isFile = path.extname(filePath) !== "";
   const sparsePath = isFile ? filePath : `${filePath}/*`;
   await writeFile(".git/info/sparse-checkout", sparsePath);
 
   try {
     await exec(pullSource(branch));
-    await exec(`mv ${filePath} ${path.dirname(tempDownloadPath)}`);
+    const destinationPath = path.join(outputDirectory, path.basename(filePath));
+    await exec(`mv ${filePath} ${destinationPath}`);
   } catch (error) {
     console.error("\nError pulling git repository:", error);
     process.exit(1);
   } finally {
-    process.chdir("..");
+    process.chdir(outputDirectory);
     await exec(`rm -rf ${tempDownloadName}`);
   }
 }
