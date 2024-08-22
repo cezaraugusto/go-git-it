@@ -7,6 +7,7 @@ import pullSource from "./pullSource";
 const exec = util.promisify(execCallback);
 const mkdir = util.promisify(fs.mkdir);
 const writeFile = util.promisify(fs.writeFile);
+const rm = util.promisify(fs.rm);
 
 export default async function downloadPartialRepo(
   outputDirectory: string,
@@ -19,6 +20,12 @@ export default async function downloadPartialRepo(
 ) {
   const tempDownloadName = ".go-git-it-temp-folder";
   const tempDownloadPath = path.join(outputDirectory, tempDownloadName);
+
+  // Check and remove any existing .go-git-it-temp-folder
+  if (fs.existsSync(tempDownloadPath)) {
+    console.log(`Removing existing ${tempDownloadName}...`);
+    await rm(tempDownloadPath, { recursive: true, force: true });
+  }
 
   await mkdir(tempDownloadPath, { recursive: true });
   process.chdir(tempDownloadPath);
