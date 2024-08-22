@@ -32,11 +32,10 @@ export default async function downloadMainRepo(
     try {
       await exec(pullSource(branch));
       success = true;
-      console.log(`\nSuccessfully pulled from branch '${branch}'.`);
       break; // Exit the loop on success
     } catch (error) {
       console.log(
-        `\nFailed to pull using branch '${branch}'. Trying next option...`
+        `Failed to pull using branch '${branch}'. Trying next option...`
       );
     }
   }

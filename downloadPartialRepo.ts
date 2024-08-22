@@ -44,7 +44,7 @@ export default async function downloadPartialRepo(
     const destinationPath = path.join(outputDirectory, path.basename(filePath));
     await exec(`mv ${filePath} ${destinationPath}`);
   } catch (error) {
-    console.error("\nError pulling git repository:", error);
+    console.error("Error pulling git repository:", error);
     process.exit(1);
   } finally {
     process.chdir(outputDirectory);
