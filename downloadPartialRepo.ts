@@ -8,6 +8,7 @@ const exec = util.promisify(execCallback);
 const mkdir = util.promisify(fs.mkdir);
 const writeFile = util.promisify(fs.writeFile);
 const rm = util.promisify(fs.rm);
+const rename = util.promisify(fs.rename);
 
 export default async function downloadPartialRepo(
   outputDirectory: string,
@@ -42,12 +43,14 @@ export default async function downloadPartialRepo(
   try {
     await exec(pullSource(branch));
     const destinationPath = path.join(outputDirectory, path.basename(filePath));
-    await exec(`mv ${filePath} ${destinationPath}`);
+    await rename(filePath, destinationPath);
   } catch (error) {
     console.error("Error pulling git repository:", error);
     process.exit(1);
   } finally {
     process.chdir(outputDirectory);
-    await exec(`rm -rf ${tempDownloadName}`);
+    if (fs.existsSync(tempDownloadPath)) {
+      await rm(tempDownloadPath, { recursive: true, force: true });
+    }
   }
 }
