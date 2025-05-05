@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { yellow, blue, underline } from "@colors/colors/safe";
 import * as getData from "./get-data";
 import addProgressBar from "./add-progress-bar";
 import downloadMainRepo from "./download-main-repo";
@@ -46,16 +45,14 @@ async function goGitIt(
   const outDir = outputDirectory || process.cwd();
   const remoteSource = `@${remoteInfo.owner}/${remoteInfo.project} `;
   await addProgressBar(
-    text || `Downloading ${yellow(filePath)} from ${blue(remoteSource)}`,
+    text || `Downloading ${filePath} from ${remoteSource}`,
     async () => {
       await cloneRemote(outDir, { ...remoteInfo, filePath, isMainRepo });
     },
   );
 
   if (!text) {
-    console.log(
-      `Success! Data downloaded to ${underline(outDir + "/" + filePath)}`,
-    );
+    console.log(`Success! Data downloaded to ${outDir + "/" + filePath}`);
   }
 }
 
