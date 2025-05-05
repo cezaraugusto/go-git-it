@@ -17,7 +17,7 @@ export default async function downloadPartialRepo(
     project,
     filePath,
     branch,
-  }: { owner: string; project: string; filePath: string; branch: string }
+  }: { owner: string; project: string; filePath: string; branch: string },
 ) {
   const tempDownloadName = ".go-git-it-temp-folder";
   const tempDownloadPath = path.join(outputDirectory, tempDownloadName);
@@ -29,26 +29,29 @@ export default async function downloadPartialRepo(
   }
 
   await mkdir(tempDownloadPath, { recursive: true });
-  process.chdir(tempDownloadPath);
 
-  await exec("git init --quiet");
-  await exec(`git remote add origin https://github.com/${owner}/${project}`);
+  await exec("git init --quiet", { cwd: tempDownloadPath });
+  await exec(`git remote add origin https://github.com/${owner}/${project}`, {
+    cwd: tempDownloadPath,
+  });
 
-  await exec("git config core.sparseCheckout true");
+  await exec("git config core.sparseCheckout true", { cwd: tempDownloadPath });
 
   const isFile = path.extname(filePath) !== "";
   const sparsePath = isFile ? filePath : `${filePath}/*`;
-  await writeFile(".git/info/sparse-checkout", sparsePath);
+  await writeFile(
+    path.join(tempDownloadPath, ".git/info/sparse-checkout"),
+    sparsePath,
+  );
 
   try {
-    await exec(pullSource(branch));
+    await exec(pullSource(branch), { cwd: tempDownloadPath });
     const destinationPath = path.join(outputDirectory, path.basename(filePath));
-    await rename(filePath, destinationPath);
+    await rename(path.join(tempDownloadPath, filePath), destinationPath);
   } catch (error) {
     console.error("Error pulling git repository:", error);
     process.exit(1);
   } finally {
-    process.chdir(outputDirectory);
     if (fs.existsSync(tempDownloadPath)) {
       await rm(tempDownloadPath, { recursive: true, force: true });
     }

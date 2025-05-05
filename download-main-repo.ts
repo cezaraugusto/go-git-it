@@ -14,15 +14,17 @@ interface DownloadMainRepo {
 
 export default async function downloadMainRepo(
   outputDirectory: string,
-  { owner, project }: DownloadMainRepo
+  { owner, project }: DownloadMainRepo,
 ) {
   const projectPath = path.join(outputDirectory, project);
 
   await mkdir(projectPath, { recursive: true });
-  process.chdir(projectPath);
 
-  await exec("git init --quiet");
-  await exec(`git remote add origin https://github.com/${owner}/${project}`);
+  // Execute git commands in the project directory
+  await exec("git init --quiet", { cwd: projectPath });
+  await exec(`git remote add origin https://github.com/${owner}/${project}`, {
+    cwd: projectPath,
+  });
 
   // Try to pull from 'main' first, then fallback to 'master'
   const branches = ["main", "master"];
@@ -30,23 +32,23 @@ export default async function downloadMainRepo(
 
   for (const branch of branches) {
     try {
-      await exec(pullSource(branch));
+      await exec(pullSource(branch), { cwd: projectPath });
       success = true;
       break; // Exit the loop on success
     } catch (error) {
       console.log(
-        `Failed to pull using branch '${branch}'. Trying next option...`
+        `Failed to pull using branch '${branch}'. Trying next option...`,
       );
     }
   }
 
   if (!success) {
     console.error(
-      "Error: Could not determine the default branch or failed to pull from it."
+      "Error: Could not determine the default branch or failed to pull from it.",
     );
     process.exit(1);
   }
 
   // Clean up .git directory
-  await exec(`rm -rf .git`);
+  await exec(`rm -rf .git`, { cwd: projectPath });
 }
