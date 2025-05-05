@@ -1,7 +1,6 @@
 import { describe, afterEach, test, expect } from "vitest";
 import path from "path";
-import fs from "fs-extra";
-import shell from "shelljs";
+import { promises as fs } from "fs";
 import goGitIt from "./dist/module";
 
 const repoURL = "https://github.com/lodash/lodash";
@@ -11,59 +10,92 @@ const customPath = path.resolve(__dirname, "some/extraordinary/folder");
 
 describe("go-git-it", () => {
   describe("working with full URLs", () => {
-    afterEach(() => {
-      shell.rm("-rf", path.resolve(__dirname, path.basename(repoURL)));
-      shell.rm("-rf", path.resolve(__dirname, "some"));
+    afterEach(async () => {
+      const repoPath = path.resolve(__dirname, path.basename(repoURL));
+      const somePath = path.resolve(__dirname, "some");
+
+      try {
+        await fs.rm(repoPath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
+      try {
+        await fs.rm(somePath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
     });
 
     test("works with default path", async () => {
       await goGitIt(repoURL);
       const pathName = path.resolve(__dirname, path.basename(repoURL));
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
 
     test("works with a custom path", async () => {
       await goGitIt(repoURL, customPath);
       const pathName = path.resolve(customPath, path.basename(repoURL));
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
   });
 
   describe("working with partial URLs (basename is file)", () => {
-    afterEach(() => {
-      shell.rm("-rf", path.basename(fileURL));
-      shell.rm("-rf", path.resolve(__dirname, "some"));
+    afterEach(async () => {
+      const filePath = path.resolve(process.cwd(), path.basename(fileURL));
+      const somePath = path.resolve(__dirname, "some");
+
+      try {
+        await fs.rm(filePath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
+      try {
+        await fs.rm(somePath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
     });
 
     test("works with default path", async () => {
       await goGitIt(fileURL);
       const pathName = path.resolve(process.cwd(), "file.js");
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
 
     test("works with a custom path", async () => {
       await goGitIt(fileURL, customPath);
       const pathName = path.resolve(customPath, "file.js");
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
   });
 
   describe("working with partial URLs (basename is folder)", () => {
-    afterEach(() => {
-      shell.rm("-rf", path.resolve(__dirname, "lib"));
-      shell.rm("-rf", path.resolve(__dirname, "some"));
+    afterEach(async () => {
+      const libPath = path.resolve(process.cwd(), "lib");
+      const somePath = path.resolve(__dirname, "some");
+
+      try {
+        await fs.rm(libPath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
+      try {
+        await fs.rm(somePath, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore if file doesn't exist
+      }
     });
 
     test("works with default path", async () => {
       await goGitIt(folderURL);
       const pathName = path.resolve(process.cwd(), "lib");
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
 
     test("works with a custom path", async () => {
       await goGitIt(folderURL, customPath);
       const pathName = path.resolve(customPath, "lib");
-      expect(await fs.pathExists(pathName)).toBe(true);
+      await expect(fs.access(pathName)).resolves.not.toThrow();
     });
   });
 });
