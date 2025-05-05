@@ -1,16 +1,16 @@
 const NO_BRANCH_FOUND = -1;
 
-function getOwner(urlData: string[]) {
+export function getOwner(urlData: string[]) {
   return urlData[1];
 }
 
-function getProject(urlData: string[]) {
+export function getProject(urlData: string[]) {
   return urlData[2];
 }
 
-function getFilePath(urlData: string[]) {
+export function getFilePath(urlData: string[]) {
   const branchIndex = urlData.findIndex(
-    (data) => data === "blob" || data === "tree"
+    (data) => data === "blob" || data === "tree",
   );
 
   if (branchIndex !== NO_BRANCH_FOUND) {
@@ -20,9 +20,9 @@ function getFilePath(urlData: string[]) {
   return urlData.slice(3).join("/");
 }
 
-function getBranch(urlData: string[]) {
+export function getBranch(urlData: string[]) {
   const branchIndex = urlData.findIndex(
-    (data) => data === "blob" || data === "tree"
+    (data) => data === "blob" || data === "tree",
   );
 
   if (branchIndex !== NO_BRANCH_FOUND) {
@@ -32,5 +32,3 @@ function getBranch(urlData: string[]) {
   // Assume 'main'
   return "main";
 }
-
-export { getOwner, getProject, getFilePath, getBranch };

@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 import { yellow, blue, underline } from "@colors/colors/safe";
-
-import downloadMainRepo from "./downloadMainRepo";
-import downloadPartialRepo from "./downloadPartialRepo";
+import * as getData from "./get-data";
+import addProgressBar from "./add-progress-bar";
+import downloadMainRepo from "./download-main-repo";
+import downloadPartialRepo from "./download-partial-repo";
 import cli from "./cli";
-
-import * as getData from "./getData";
-import addProgressBar from "./addProgressBar";
 
 async function cloneRemote(
   outputDirectory: string,
@@ -17,7 +15,7 @@ async function cloneRemote(
     project: string;
     isMainRepo: boolean;
     branch: string;
-  }
+  },
 ) {
   const { owner, project, isMainRepo } = options;
 
@@ -31,7 +29,7 @@ async function cloneRemote(
 async function goGitIt(
   gitURL: string,
   outputDirectory?: string,
-  text?: string
+  text?: string,
 ) {
   const urlData = new URL(gitURL).pathname.split("/");
   const remoteInfo = {
@@ -51,18 +49,20 @@ async function goGitIt(
     text || `Downloading ${yellow(filePath)} from ${blue(remoteSource)}`,
     async () => {
       await cloneRemote(outDir, { ...remoteInfo, filePath, isMainRepo });
-    }
+    },
   );
 
   if (!text) {
     console.log(
-      `Success! Data downloaded to ${underline(outDir + "/" + filePath)}`
+      `Success! Data downloaded to ${underline(outDir + "/" + filePath)}`,
     );
   }
 }
 
 // Execute CLI if requested
-if (require.main === module) cli(goGitIt);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  cli(goGitIt);
+}
 
 // Export as a node module as well
 export default goGitIt;

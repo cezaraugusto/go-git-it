@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["es2021"],
+    "target": "es2022",
+    "lib": ["es2022", "dom"],
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -11,13 +11,15 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
     "isolatedModules": true,
+    "module": "es2022",
     "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"]
   },
   "include": ["."],
   "exclude": ["dist", "node_modules"]
