@@ -4,7 +4,7 @@
 [npm-url]: https://npmjs.org/package/go-git-it
 [npm-bundle-image]: https://img.shields.io/bundlephobia/min/go-git-it
 [npm-bundle-url]: https://npmjs.org/package/go-git-it
-[npm-downloads-image]: https://img.shields.io/npm/dw/go-git-it
+[npm-downloads-image]: https://img.shields.io/npm/dm/go-git-it
 [npm-downloads-url]: https://npmjs.org/package/go-git-it
 
 # go-git-it [![npm][npm-image]][npm-url] [![downloads][npm-downloads-image]][npm-downloads-url] [![size][npm-bundle-image]][npm-bundle-url] [![workflow][action-image]][action-url]
