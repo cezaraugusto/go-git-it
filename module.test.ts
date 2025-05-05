@@ -1,9 +1,8 @@
-/* global describe, afterEach, test, expect */
+import { describe, afterEach, test, expect } from "vitest";
 import path from "path";
 import fs from "fs-extra";
 import shell from "shelljs";
 import goGitIt from "./dist/module";
-import { describe, afterEach, test, expect } from "vitest";
 
 const repoURL = "https://github.com/lodash/lodash";
 const folderURL = "https://github.com/lodash/lodash/tree/main/lib";
