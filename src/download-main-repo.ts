@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { exec as execCallback } from 'child_process';
 import util from 'util';
-import pullSource from '../pullSource';
+import pullSource from './pull-source';
 
 const exec = util.promisify(execCallback);
 const mkdir = util.promisify(fs.mkdir);
