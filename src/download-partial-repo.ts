@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import { exec as execCallback } from "child_process";
-import util from "util";
-import pullSource from "./pullSource";
+import path from 'path';
+import fs from 'fs';
+import { exec as execCallback } from 'child_process';
+import util from 'util';
+import pullSource from '../pullSource';
 
 const exec = util.promisify(execCallback);
 const mkdir = util.promisify(fs.mkdir);
@@ -19,7 +19,7 @@ export default async function downloadPartialRepo(
     branch,
   }: { owner: string; project: string; filePath: string; branch: string },
 ) {
-  const tempDownloadName = ".go-git-it-temp-folder";
+  const tempDownloadName = '.go-git-it-temp-folder';
   const tempDownloadPath = path.join(outputDirectory, tempDownloadName);
 
   // Check and remove any existing .go-git-it-temp-folder
@@ -30,17 +30,17 @@ export default async function downloadPartialRepo(
 
   await mkdir(tempDownloadPath, { recursive: true });
 
-  await exec("git init --quiet", { cwd: tempDownloadPath });
+  await exec('git init --quiet', { cwd: tempDownloadPath });
   await exec(`git remote add origin https://github.com/${owner}/${project}`, {
     cwd: tempDownloadPath,
   });
 
-  await exec("git config core.sparseCheckout true", { cwd: tempDownloadPath });
+  await exec('git config core.sparseCheckout true', { cwd: tempDownloadPath });
 
-  const isFile = path.extname(filePath) !== "";
+  const isFile = path.extname(filePath) !== '';
   const sparsePath = isFile ? filePath : `${filePath}/*`;
   await writeFile(
-    path.join(tempDownloadPath, ".git/info/sparse-checkout"),
+    path.join(tempDownloadPath, '.git/info/sparse-checkout'),
     sparsePath,
   );
 
@@ -49,7 +49,7 @@ export default async function downloadPartialRepo(
     const destinationPath = path.join(outputDirectory, path.basename(filePath));
     await rename(path.join(tempDownloadPath, filePath), destinationPath);
   } catch (error) {
-    console.error("Error pulling git repository:", error);
+    console.error('Error pulling git repository:', error);
     process.exit(1);
   } finally {
     if (fs.existsSync(tempDownloadPath)) {

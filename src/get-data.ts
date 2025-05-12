@@ -10,19 +10,19 @@ export function getProject(urlData: string[]) {
 
 export function getFilePath(urlData: string[]) {
   const branchIndex = urlData.findIndex(
-    (data) => data === "blob" || data === "tree",
+    (data) => data === 'blob' || data === 'tree',
   );
 
   if (branchIndex !== NO_BRANCH_FOUND) {
-    return urlData.slice(branchIndex + 2).join("/");
+    return urlData.slice(branchIndex + 2).join('/');
   }
 
-  return urlData.slice(3).join("/");
+  return urlData.slice(3).join('/');
 }
 
 export function getBranch(urlData: string[]) {
   const branchIndex = urlData.findIndex(
-    (data) => data === "blob" || data === "tree",
+    (data) => data === 'blob' || data === 'tree',
   );
 
   if (branchIndex !== NO_BRANCH_FOUND) {
@@ -30,5 +30,5 @@ export function getBranch(urlData: string[]) {
   }
 
   // Assume 'main'
-  return "main";
+  return 'main';
 }

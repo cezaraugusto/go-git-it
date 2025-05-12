@@ -52,18 +52,18 @@ npm install go-git-it
 ### Usage
 
 ```js
-import goGitIt from "go-git-it";
+import goGitIt from 'go-git-it';
 
 // Assume cwd is ~/mydevspace/
 
-await goGitIt("https://github.com/username/repository");
+await goGitIt('https://github.com/username/repository');
 // copied remote content to ~/mydevspace/repository
 
-await goGitIt("https://github.com/username/repository/tree/main/folder");
+await goGitIt('https://github.com/username/repository/tree/main/folder');
 // copied remote content to ~/mydevspace/folder
 
 await goGitIt(
-  "https://github.com/username/repository/blob/main/folder/file.js",
+  'https://github.com/username/repository/blob/main/folder/file.js',
 );
 // copied remote content to ~/mydevspace/file.js
 ```
@@ -71,11 +71,11 @@ await goGitIt(
 **The second parameter is the output path:**
 
 ```js
-import goGitIt from "go-git-it";
+import goGitIt from 'go-git-it';
 
 // Assume cwd is ~/mydevspace/
 
-await goGitIt("https://github.com/username/repository", "path/to/outputDir");
+await goGitIt('https://github.com/username/repository', 'path/to/outputDir');
 // copied remote content to path/to/outputDir/repository
 ```
 
