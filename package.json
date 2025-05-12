@@ -8,7 +8,7 @@
     "node": ">=16"
   },
   "name": "go-git-it",
-  "version": "3.0.1",
+  "version": "4.0.0-0",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
   "type": "module",
   "exports": {
