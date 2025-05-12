@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import * as getData from "./get-data";
-import addProgressBar from "./add-progress-bar";
-import downloadMainRepo from "./download-main-repo";
-import downloadPartialRepo from "./download-partial-repo";
-import cli from "./cli";
+import * as getData from './get-data';
+import addProgressBar from './add-progress-bar';
+import downloadMainRepo from './download-main-repo';
+import downloadPartialRepo from './download-partial-repo';
+import cli from './cli';
 
 async function cloneRemote(
   outputDirectory: string,
@@ -30,7 +30,7 @@ async function goGitIt(
   outputDirectory?: string,
   text?: string,
 ) {
-  const urlData = new URL(gitURL).pathname.split("/");
+  const urlData = new URL(gitURL).pathname.split('/');
   const remoteInfo = {
     owner: getData.getOwner(urlData),
     project: getData.getProject(urlData),
@@ -52,7 +52,7 @@ async function goGitIt(
   );
 
   if (!text) {
-    console.log(`Success! Data downloaded to ${outDir + "/" + filePath}`);
+    console.log(`Success! Data downloaded to ${outDir + '/' + filePath}`);
   }
 }
 

@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import { exec as execCallback } from "child_process";
-import util from "util";
-import pullSource from "./pullSource";
+import path from 'path';
+import fs from 'fs';
+import { exec as execCallback } from 'child_process';
+import util from 'util';
+import pullSource from '../pullSource';
 
 const exec = util.promisify(execCallback);
 const mkdir = util.promisify(fs.mkdir);
@@ -21,13 +21,13 @@ export default async function downloadMainRepo(
   await mkdir(projectPath, { recursive: true });
 
   // Execute git commands in the project directory
-  await exec("git init --quiet", { cwd: projectPath });
+  await exec('git init --quiet', { cwd: projectPath });
   await exec(`git remote add origin https://github.com/${owner}/${project}`, {
     cwd: projectPath,
   });
 
   // Try to pull from 'main' first, then fallback to 'master'
-  const branches = ["main", "master"];
+  const branches = ['main', 'master'];
   let success = false;
 
   for (const branch of branches) {
@@ -44,7 +44,7 @@ export default async function downloadMainRepo(
 
   if (!success) {
     console.error(
-      "Error: Could not determine the default branch or failed to pull from it.",
+      'Error: Could not determine the default branch or failed to pull from it.',
     );
     process.exit(1);
   }
