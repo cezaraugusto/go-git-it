@@ -1,7 +1,7 @@
 import { describe, afterEach, test, expect } from 'vitest';
 import path from 'path';
 import { promises as fs } from 'fs';
-import goGitIt from './dist/index.js';
+import goGitIt from 'go-git-it';
 
 const repoURL = 'https://github.com/lodash/lodash';
 const folderURL = 'https://github.com/lodash/lodash/tree/main/lib';
