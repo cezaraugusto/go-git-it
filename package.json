@@ -4,9 +4,6 @@
     "type": "git",
     "url": "https://github.com/cezaraugusto/go-git-it.git"
   },
-  "engines": {
-    "node": ">=16"
-  },
   "name": "go-git-it",
   "version": "4.0.0-1",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
