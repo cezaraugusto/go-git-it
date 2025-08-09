@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "target": "ES2020",
     "lib": ["ES2021"],
     "module": "ESNext",
     "noEmit": true,
@@ -10,7 +11,8 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "downlevelIteration": true
   },
   "include": ["src"]
 }
