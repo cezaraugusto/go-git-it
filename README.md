@@ -22,21 +22,21 @@ npx go-git-it <url> [outputDir]
 ```sh
 # cwd is ~/mydevspace/
 
-npx go-git-it https://github.com/username/repository
-# copied remote content to ~/mydevspace/repository
+npx go-git-it https://github.com/extension-js/extension.js
+# Creates ~/mydevspace/extension.js/ folder (like git clone)
 
-npx go-git-it https://github.com/username/repository/tree/main/folder
-# copied remote content to ~/mydevspace/folder
+npx go-git-it https://github.com/extension-js/extension.js/tree/main/templates/react/images
+# Creates ~/mydevspace/images/ folder
 
-npx go-git-it https://github.com/username/repository/blob/main/folder/file.js
-# copied remote content to ~/mydevspace/file.js
+npx go-git-it https://github.com/extension-js/extension.js/blob/main/templates/react/manifest.json
+# Downloads ~/mydevspace/manifest.json
 ```
 
 **The second command argument is the output directory:**
 
 ```sh
-npx go-git-it https://github.com/username/repository path/to/outputDir
-# copied remote content to path/to/outputDir/repository
+npx go-git-it https://github.com/extension-js/extension.js ./my-browser-extension
+# Creates ./my-browser-extension/extension.js/ folder (like git clone)
 ```
 
 ## Node interface
@@ -56,16 +56,18 @@ import goGitIt from 'go-git-it';
 
 // Assume cwd is ~/mydevspace/
 
-await goGitIt('https://github.com/username/repository');
-// copied remote content to ~/mydevspace/repository
-
-await goGitIt('https://github.com/username/repository/tree/main/folder');
-// copied remote content to ~/mydevspace/folder
+await goGitIt('https://github.com/extension-js/extension.js');
+// Creates ~/mydevspace/extension.js/ folder (like git clone)
 
 await goGitIt(
-  'https://github.com/username/repository/blob/main/folder/file.js',
+  'https://github.com/extension-js/extension.js/tree/main/templates/react/images',
 );
-// copied remote content to ~/mydevspace/file.js
+// Creates ~/mydevspace/images/ folder
+
+await goGitIt(
+  'https://github.com/extension-js/extension.js/blob/main/templates/react/manifest.json',
+);
+// Downloads ~/mydevspace/manifest.json
 ```
 
 **The second parameter is the output path:**
@@ -75,8 +77,11 @@ import goGitIt from 'go-git-it';
 
 // Assume cwd is ~/mydevspace/
 
-await goGitIt('https://github.com/username/repository', 'path/to/outputDir');
-// copied remote content to path/to/outputDir/repository
+await goGitIt(
+  'https://github.com/extension-js/extension.js',
+  './my-browser-extension',
+);
+// Creates ./my-browser-extension/extension.js/ folder (like git clone)
 ```
 
 ### API

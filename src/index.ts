@@ -1,58 +1,102 @@
 #!/usr/bin/env node
 
-import * as getData from './get-data';
-import addProgressBar from './add-progress-bar';
-import downloadMainRepo from './download-main-repo';
-import downloadPartialRepo from './download-partial-repo';
-import cli from './cli';
+import addProgressBar from './add-progress-bar.js';
+import {
+  parseGitHubUrl,
+  isValidGitHubUrl,
+  getOutputDirectoryName,
+} from './utils/url-parser.js';
+import {
+  downloadFullRepository,
+  downloadPartialRepository,
+  downloadReleaseAsset,
+  validateGitAvailability,
+  testGitHubConnectivity,
+} from './utils/download-strategies.js';
+import {
+  generateTempDirName,
+  createDirectory,
+  cleanupTempDirectory,
+} from './utils/cross-platform.js';
+import cli from './cli.js';
+import path from 'path';
 
+/**
+ * Enhanced GitHub content downloader with git clone compatible behavior
+ */
 async function cloneRemote(
   outputDirectory: string,
-  options: {
-    filePath: string;
-    owner: string;
-    project: string;
-    isMainRepo: boolean;
-    branch: string;
-  },
-) {
-  const { owner, project, isMainRepo } = options;
+  gitUrl: string,
+): Promise<void> {
+  // Validate git availability first
+  await validateGitAvailability();
 
-  if (isMainRepo) {
-    await downloadMainRepo(outputDirectory, { owner, project });
-  } else {
-    await downloadPartialRepo(outputDirectory, options);
+  // Parse the GitHub URL
+  const urlData = parseGitHubUrl(gitUrl);
+
+  // Test GitHub connectivity
+  await testGitHubConnectivity(urlData.owner, urlData.project);
+
+  // Create unique temporary directory
+  const tempDirName = generateTempDirName();
+  const tempDir = path.join(outputDirectory, tempDirName);
+
+  try {
+    // Create temporary directory
+    await createDirectory(tempDir);
+
+    // Choose appropriate download strategy
+    if (urlData.isReleaseAsset) {
+      await downloadReleaseAsset(outputDirectory, urlData, tempDir);
+    } else if (urlData.isMainRepo) {
+      await downloadFullRepository(outputDirectory, urlData);
+    } else {
+      await downloadPartialRepository(outputDirectory, urlData, tempDir);
+    }
+  } finally {
+    // Always cleanup temporary directory
+    await cleanupTempDirectory(tempDir);
   }
 }
 
+/**
+ * Main function - matches git clone API: goGitIt(url, [directory])
+ */
 async function goGitIt(
   gitURL: string,
   outputDirectory?: string,
-  text?: string,
-) {
-  const urlData = new URL(gitURL).pathname.split('/');
-  const remoteInfo = {
-    owner: getData.getOwner(urlData),
-    project: getData.getProject(urlData),
-    filePath: getData.getFilePath(urlData),
-    branch: getData.getBranch(urlData),
-  };
+  progressText?: string,
+): Promise<void> {
+  // Validate GitHub URL
+  if (!isValidGitHubUrl(gitURL)) {
+    throw new Error(
+      'Invalid GitHub URL. Please provide a valid GitHub repository URL.',
+    );
+  }
 
-  const filePath = remoteInfo.filePath || remoteInfo.project;
-  const isMainRepo = filePath === remoteInfo.project;
+  // Parse URL to get expected output info
+  const urlData = parseGitHubUrl(gitURL);
+  const outputName = getOutputDirectoryName(urlData);
 
-  // Output directory defaults to working directory
+  // Output directory defaults to current working directory (like git clone)
   const outDir = outputDirectory || process.cwd();
-  const remoteSource = `@${remoteInfo.owner}/${remoteInfo.project} `;
-  await addProgressBar(
-    text || `Downloading ${filePath} from ${remoteSource}`,
-    async () => {
-      await cloneRemote(outDir, { ...remoteInfo, filePath, isMainRepo });
-    },
-  );
 
-  if (!text) {
-    console.log(`Success! Data downloaded to ${outDir + '/' + filePath}`);
+  // Ensure output directory exists
+  await createDirectory(outDir);
+
+  const remoteSource = `${urlData.owner}/${urlData.project}`;
+  const defaultProgressText = urlData.isMainRepo
+    ? `Cloning ${remoteSource}...`
+    : `Downloading ${outputName} from ${remoteSource}...`;
+
+  await addProgressBar(progressText || defaultProgressText, async () => {
+    await cloneRemote(outDir, gitURL);
+  });
+
+  // Success message with final path (matching git clone behavior)
+  const finalPath = path.join(outDir, outputName);
+  if (!progressText) {
+    console.log(`Success! Content downloaded to ${finalPath}`);
   }
 }
 
