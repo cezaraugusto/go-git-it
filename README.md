@@ -1,13 +1,13 @@
 [action-image]: https://github.com/cezaraugusto/go-git-it/workflows/CI/badge.svg
 [action-url]: https://github.com/cezaraugusto/go-git-it/actions
-[npm-image]: https://img.shields.io/npm/v/go-git-it.svg
+[npm-image]: https://img.shields.io/npm/v/go-git-it.svg?color=0971fe
 [npm-url]: https://npmjs.org/package/go-git-it
-[npm-bundle-image]: https://img.shields.io/bundlephobia/min/go-git-it
-[npm-bundle-url]: https://npmjs.org/package/go-git-it
 [npm-downloads-image]: https://img.shields.io/npm/dm/go-git-it
 [npm-downloads-url]: https://npmjs.org/package/go-git-it
 
-# go-git-it [![npm][npm-image]][npm-url] [![downloads][npm-downloads-image]][npm-downloads-url] [![size][npm-bundle-image]][npm-bundle-url] [![workflow][action-image]][action-url]
+[![npm][npm-image]][npm-url] [![downloads][npm-downloads-image]][npm-downloads-url] [![workflow][action-image]][action-url]
+
+# go-git-it
 
 > Download any repository or subdirectory on GitHub with support for Node.js and the CLI
 
@@ -105,15 +105,6 @@ Custom path to the outputDir (defaults to the working directory)
 Type: `string`
 
 Adds a custom text message instead of default config. This option overrides the success message as well.
-
-### Features
-
-- Progress bar showing download status
-- Support for downloading entire repositories
-- Support for downloading specific folders
-- Support for downloading individual files
-- Custom output directory support
-- Custom progress messages
 
 ## License
 
