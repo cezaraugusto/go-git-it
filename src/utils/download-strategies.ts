@@ -9,6 +9,7 @@ import {
   pathExists,
   moveFileOrDirectory,
 } from './cross-platform.js';
+import { GoGitItSilentError } from './errors.js';
 import { GitHubUrlData } from './url-parser.js';
 
 export async function downloadFullRepository(
@@ -153,11 +154,20 @@ export async function downloadReleaseAsset(
                 https
                   .get(redirectUrl, (redirectResponse) => {
                     if (redirectResponse.statusCode !== 200) {
-                      reject(
-                        new Error(
-                          `Failed to download release asset: HTTP ${redirectResponse.statusCode}`,
-                        ),
-                      );
+                      const statusCode = redirectResponse.statusCode;
+                      if (statusCode === 404) {
+                        reject(
+                          new GoGitItSilentError(
+                            'Release asset not found (HTTP 404). Check the release tag and asset name.',
+                          ),
+                        );
+                      } else {
+                        reject(
+                          new Error(
+                            `Failed to download release asset: HTTP ${statusCode}`,
+                          ),
+                        );
+                      }
                       return;
                     }
 
@@ -177,11 +187,20 @@ export async function downloadReleaseAsset(
             if (response.statusCode !== 200) {
               writeStream.destroy();
               fileHandle.close();
-              reject(
-                new Error(
-                  `Failed to download release asset: HTTP ${response.statusCode}`,
-                ),
-              );
+              const statusCode = response.statusCode;
+              if (statusCode === 404) {
+                reject(
+                  new GoGitItSilentError(
+                    'Release asset not found (HTTP 404). Check the release tag and asset name.',
+                  ),
+                );
+              } else {
+                reject(
+                  new Error(
+                    `Failed to download release asset: HTTP ${statusCode}`,
+                  ),
+                );
+              }
               return;
             }
 
