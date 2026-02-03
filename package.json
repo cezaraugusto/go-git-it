@@ -5,7 +5,7 @@
     "url": "https://github.com/cezaraugusto/go-git-it.git"
   },
   "name": "go-git-it",
-  "version": "5.0.3",
+  "version": "5.1.0",
   "description": "Download any repository or subdirectory on GitHub with support for Node.js and the CLI",
   "type": "module",
   "exports": {
