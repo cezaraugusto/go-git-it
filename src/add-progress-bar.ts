@@ -1,4 +1,5 @@
 import ProgressBar from 'progress';
+import { isGoGitItSilentError } from './utils/errors.js';
 
 export default async function addProgressBar(
   text: string | undefined,
@@ -44,7 +45,9 @@ export default async function addProgressBar(
         // Ensure the interval is cleared in case of error
         clearInterval(timer);
 
-        console.error('[go-git-it] An error occurred:', error);
+        if (!isGoGitItSilentError(error)) {
+          console.error('[go-git-it] An error occurred:', error);
+        }
         reject(error);
       });
   });
