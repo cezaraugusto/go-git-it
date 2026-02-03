@@ -5,9 +5,9 @@ import goGitIt from './src/index.js';
 
 const repoURL = 'https://github.com/extension-js/extension.js';
 const folderURL =
-  'https://github.com/extension-js/extension.js/tree/main/templates/react/images';
+  'https://github.com/extension-js/extension.js/tree/main/templates/react/src/images';
 const fileURL =
-  'https://github.com/extension-js/extension.js/blob/main/templates/react/manifest.json';
+  'https://github.com/extension-js/extension.js/blob/main/templates/react/src/manifest.json';
 const customPath = path.resolve(__dirname, 'some/extraordinary/folder');
 
 describe('go-git-it', () => {
