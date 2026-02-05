@@ -1,5 +1,7 @@
 import { describe, afterEach, test, expect, vi } from 'vitest';
-import cli from './src/cli.js';
+import path from 'path';
+import { pathToFileURL } from 'url';
+import cli, { shouldRunAsCli } from './src/cli.js';
 
 const originalArgv = process.argv;
 
@@ -76,5 +78,40 @@ describe('cli', () => {
 
     expect(exitMock).toHaveBeenCalledWith(1);
     expect(errorMock).toHaveBeenCalled();
+  });
+});
+
+describe('shouldRunAsCli', () => {
+  test('returns true for direct absolute entry path', () => {
+    const entryPath = path.join(process.cwd(), 'dist', 'index.js');
+    const importMetaUrl = pathToFileURL(entryPath).href;
+
+    expect(shouldRunAsCli(importMetaUrl, entryPath)).toBe(true);
+  });
+
+  test('returns true for relative entry path', () => {
+    const entryPath = path.join(process.cwd(), 'dist', 'index.js');
+    const importMetaUrl = pathToFileURL(entryPath).href;
+    const relativePath = path.relative(process.cwd(), entryPath);
+
+    expect(shouldRunAsCli(importMetaUrl, relativePath)).toBe(true);
+  });
+
+  test('returns true for binary name', () => {
+    const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href;
+
+    expect(shouldRunAsCli(importMetaUrl, 'go-git-it')).toBe(true);
+  });
+
+  test('returns false for unrelated argv1', () => {
+    const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href;
+
+    expect(shouldRunAsCli(importMetaUrl, '/usr/bin/node')).toBe(false);
+  });
+
+  test('returns false when argv1 is missing', () => {
+    const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href;
+
+    expect(shouldRunAsCli(importMetaUrl, undefined)).toBe(false);
   });
 });

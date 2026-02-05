@@ -18,7 +18,7 @@ import {
   createDirectory,
   cleanupTempDirectory,
 } from './utils/cross-platform.js';
-import cli from './cli.js';
+import cli, { shouldRunAsCli } from './cli.js';
 import path from 'path';
 
 /**
@@ -100,8 +100,8 @@ async function goGitIt(
   }
 }
 
-// Execute CLI if requested
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Execute CLI when invoked as a binary
+if (shouldRunAsCli(import.meta.url, process.argv[1])) {
   cli(goGitIt);
 }
 

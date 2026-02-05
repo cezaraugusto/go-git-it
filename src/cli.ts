@@ -1,6 +1,30 @@
 #!/usr/bin/env node
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 type GoGitIt = (gitURL: string, outputDirectory?: string) => Promise<void>;
+
+export function shouldRunAsCli(
+  importMetaUrl: string,
+  argv1: string | undefined,
+): boolean {
+  if (!argv1) {
+    return false;
+  }
+
+  const entryPath = fileURLToPath(importMetaUrl);
+  const argvPath = path.isAbsolute(argv1)
+    ? argv1
+    : path.resolve(process.cwd(), argv1);
+
+  if (argvPath === entryPath) {
+    return true;
+  }
+
+  const base = path.basename(argv1);
+  return base === 'go-git-it' || base === 'go-git-it.js' || base === 'go-git-it.cjs';
+}
 
 /**
  * Enhanced CLI with proper error handling and help text
