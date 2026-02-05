@@ -16,7 +16,7 @@
     }
   },
   "bin": {
-    "go-git-it": "./dist/index.cjs"
+    "go-git-it": "./dist/index.js"
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
