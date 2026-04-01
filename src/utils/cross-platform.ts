@@ -1,9 +1,9 @@
-import { exec as execCallback } from 'child_process';
+import { execFile as execFileCallback } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs/promises';
 import path from 'path';
 
-const exec = promisify(execCallback);
+const execFile = promisify(execFileCallback);
 
 export function generateTempDirName(): string {
   const timestamp = Date.now();
@@ -70,13 +70,13 @@ export async function moveFileOrDirectory(
 }
 
 export async function executeGitCommand(
-  command: string,
+  args: string[],
   options: { cwd: string; timeout?: number } = { cwd: process.cwd() },
 ): Promise<string> {
   const { cwd, timeout = 30000 } = options;
 
   try {
-    const { stdout, stderr } = await exec(command, {
+    const { stdout, stderr } = await execFile('git', args, {
       cwd,
       timeout,
       env: { ...process.env, GIT_TERMINAL_PROMPT: '0' }, // Disable interactive prompts
