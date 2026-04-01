@@ -10,6 +10,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
+    "types": ["node"],
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": true,
     "downlevelIteration": true

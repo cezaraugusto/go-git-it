@@ -74,6 +74,7 @@ export async function executeGitCommand(
   options: { cwd: string; timeout?: number } = { cwd: process.cwd() },
 ): Promise<string> {
   const { cwd, timeout = 30000 } = options;
+  const command = ['git', ...args].join(' ');
 
   try {
     const { stdout, stderr } = await execFile('git', args, {
