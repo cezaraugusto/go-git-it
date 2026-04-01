@@ -23,13 +23,13 @@ export async function downloadFullRepository(
 
   try {
     // Initialize git repository
-    await executeGitCommand('git init --quiet', {
+    await executeGitCommand(['init', '--quiet'], {
       cwd: projectPath,
     });
 
     // Add remote origin
     await executeGitCommand(
-      `git remote add origin https://github.com/${data.owner}/${data.project}`,
+      ['remote', 'add', 'origin', `https://github.com/${data.owner}/${data.project}`],
       { cwd: projectPath },
     );
 
@@ -42,7 +42,7 @@ export async function downloadFullRepository(
 
     for (const branch of uniqueBranches) {
       try {
-        await executeGitCommand(`git pull origin ${branch} --depth 1 --quiet`, {
+        await executeGitCommand(['pull', 'origin', branch, '--depth', '1', '--quiet'], {
           cwd: projectPath,
         });
         success = true;
@@ -75,18 +75,18 @@ export async function downloadPartialRepository(
 ): Promise<void> {
   try {
     // Initialize git repository in temp directory
-    await executeGitCommand('git init --quiet', {
+    await executeGitCommand(['init', '--quiet'], {
       cwd: tempDir,
     });
 
     // Add remote origin
     await executeGitCommand(
-      `git remote add origin https://github.com/${data.owner}/${data.project}`,
+      ['remote', 'add', 'origin', `https://github.com/${data.owner}/${data.project}`],
       { cwd: tempDir },
     );
 
     // Enable sparse checkout
-    await executeGitCommand('git config core.sparseCheckout true', {
+    await executeGitCommand(['config', 'core.sparseCheckout', 'true'], {
       cwd: tempDir,
     });
 
@@ -102,7 +102,7 @@ export async function downloadPartialRepository(
 
     // Pull the specific branch with sparse checkout
     await executeGitCommand(
-      `git pull origin ${data.branch} --depth 1 --quiet`,
+      ['pull', 'origin', data.branch, '--depth', '1', '--quiet'],
       { cwd: tempDir },
     );
 
@@ -256,7 +256,7 @@ function handleDownloadStream(
 
 export async function validateGitAvailability(): Promise<void> {
   try {
-    const output = await executeGitCommand('git --version', {
+    const output = await executeGitCommand(['--version'], {
       cwd: process.cwd(),
     });
     console.log(`Using ${output.trim()}`);
