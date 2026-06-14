@@ -100,11 +100,33 @@ export async function downloadPartialRepository(
     const sparsePath = data.isFile ? data.filePath : `${data.filePath}/*`;
     await fs.writeFile(sparseCheckoutPath, sparsePath);
 
-    // Pull the specific branch with sparse checkout
-    await executeGitCommand(
-      ['pull', 'origin', data.branch, '--depth', '1', '--quiet'],
-      { cwd: tempDir },
-    );
+    // Pull the specified branch with sparse checkout, falling back to common
+    // branches when the URL's branch isn't the repository's default.
+    const branchesToTry = [data.branch, 'main', 'master', 'develop'];
+    const uniqueBranches = [...new Set(branchesToTry)];
+
+    let success = false;
+    let lastError: Error | null = null;
+
+    for (const branch of uniqueBranches) {
+      try {
+        await executeGitCommand(
+          ['pull', 'origin', branch, '--depth', '1', '--quiet'],
+          { cwd: tempDir },
+        );
+        success = true;
+        break;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        console.log(`Failed to pull from branch '${branch}', trying next...`);
+      }
+    }
+
+    if (!success) {
+      throw new Error(
+        `Could not pull from any branch. Last error: ${lastError?.message || 'Unknown error'}`,
+      );
+    }
 
     // Move the downloaded content to final destination
     const sourcePath = path.join(tempDir, data.filePath);
