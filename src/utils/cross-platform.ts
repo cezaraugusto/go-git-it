@@ -1,121 +1,127 @@
-import { execFile as execFileCallback } from 'child_process';
-import { promisify } from 'util';
-import fs from 'fs/promises';
-import path from 'path';
+import {execFile as execFileCallback} from 'child_process'
+import {promisify} from 'util'
+import fs from 'fs/promises'
+import path from 'path'
 
-const execFile = promisify(execFileCallback);
+const execFile = promisify(execFileCallback)
 
-export function generateTempDirName(): string {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
-  return `.go-git-it-temp-${timestamp}-${random}`;
+export function generateTempDirName (): string {
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substring(2, 8)
+
+  return `.go-git-it-temp-${timestamp}-${random}`
 }
 
-export async function removeDirectory(dirPath: string): Promise<void> {
+export async function removeDirectory (dirPath: string): Promise<void> {
   try {
-    await fs.rm(dirPath, { recursive: true, force: true });
+    await fs.rm(dirPath, {recursive: true, force: true})
   } catch (error) {
     // Fallback for older Node.js versions or permission issues
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      return; // Directory doesn't exist, nothing to remove
+      return // Directory doesn't exist, nothing to remove
     }
-    throw error;
+
+    throw error
   }
 }
 
-export async function cleanupGitDirectory(repoPath: string): Promise<void> {
-  const gitPath = path.join(repoPath, '.git');
+export async function cleanupGitDirectory (repoPath: string): Promise<void> {
+  const gitPath = path.join(repoPath, '.git')
+
   try {
-    await removeDirectory(gitPath);
+    await removeDirectory(gitPath)
   } catch (error) {
-    console.warn(`Warning: Could not remove .git directory: ${error}`);
+    console.warn(`Warning: Could not remove .git directory: ${error}`)
   }
 }
 
-export async function createDirectory(dirPath: string): Promise<void> {
+export async function createDirectory (dirPath: string): Promise<void> {
   try {
-    await fs.mkdir(dirPath, { recursive: true });
+    await fs.mkdir(dirPath, {recursive: true})
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'EEXIST') {
-      return; // Directory already exists
+      return // Directory already exists
     }
-    throw error;
+
+    throw error
   }
 }
 
-export async function pathExists(targetPath: string): Promise<boolean> {
+export async function pathExists (targetPath: string): Promise<boolean> {
   try {
-    await fs.access(targetPath);
-    return true;
+    await fs.access(targetPath)
+
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
-export async function moveFileOrDirectory(
+export async function moveFileOrDirectory (
   source: string,
-  destination: string,
+  destination: string
 ): Promise<void> {
   try {
-    await fs.rename(source, destination);
+    await fs.rename(source, destination)
   } catch (error) {
     // If rename fails (cross-device), try copy + remove
     if (error instanceof Error && 'code' in error && error.code === 'EXDEV') {
-      await fs.cp(source, destination, { recursive: true });
-      await removeDirectory(source);
+      await fs.cp(source, destination, {recursive: true})
+      await removeDirectory(source)
     } else {
-      throw error;
+      throw error
     }
   }
 }
 
-export async function executeGitCommand(
+export async function executeGitCommand (
   args: string[],
-  options: { cwd: string; timeout?: number } = { cwd: process.cwd() },
+  options: {cwd: string; timeout?: number} = {cwd: process.cwd()}
 ): Promise<string> {
-  const { cwd, timeout = 30000 } = options;
-  const command = ['git', ...args].join(' ');
+  const {cwd, timeout = 30000} = options
+  const command = ['git', ...args].join(' ')
 
   try {
-    const { stdout, stderr } = await execFile('git', args, {
+    const {stdout, stderr} = await execFile('git', args, {
       cwd,
       timeout,
-      env: { ...process.env, GIT_TERMINAL_PROMPT: '0' }, // Disable interactive prompts
-    });
+      env: {...process.env, GIT_TERMINAL_PROMPT: '0'} // Disable interactive prompts
+    })
 
     if (stderr && !stderr.includes('warning:')) {
-      console.warn(`Git warning: ${stderr}`);
+      console.warn(`Git warning: ${stderr}`)
     }
 
-    return stdout;
+    return stdout
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(
-        `Git command failed: ${command}\nError: ${error.message}`,
-      );
+        `Git command failed: ${command}\nError: ${error.message}`
+      )
     }
-    throw error;
+
+    throw error
   }
 }
 
-export async function cleanupTempDirectory(
+export async function cleanupTempDirectory (
   tempPath: string,
-  maxRetries: number = 3,
+  maxRetries: number = 3
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       if (await pathExists(tempPath)) {
-        await removeDirectory(tempPath);
+        await removeDirectory(tempPath)
       }
-      return;
+      return
     } catch {
       if (attempt === maxRetries) {
         console.warn(
-          `Warning: Could not remove temporary directory after ${maxRetries} attempts: ${tempPath}`,
-        );
+          `Warning: Could not remove temporary directory after ${maxRetries} attempts: ${tempPath}`
+        )
       } else {
         // Wait a bit before retrying (helps with Windows file locking)
-        await new Promise((resolve) => setTimeout(resolve, 100 * attempt));
+        await new Promise((resolve) => setTimeout(resolve, 100 * attempt))
       }
     }
   }
