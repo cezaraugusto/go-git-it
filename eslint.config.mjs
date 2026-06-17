@@ -1,10 +1,6 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import ts from 'typescript-eslint';
+import ts from 'eslint-config-auditor/ts'
 
 export default [
-  { languageOptions: { globals: globals.browser } },
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  { ignores: ['dist/'] },
-];
+  {ignores: ['dist/**', 'build/**', 'out/**', 'coverage/**', '**/__fixtures__/**', '**/fixtures/**', '**/__mocks__/**', '**/__snapshots__/**', '**/*.min.js', '**/vendor/**', '**/*.json', 'eslint.config.mjs']},
+  ...ts,
+]
