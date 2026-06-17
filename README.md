@@ -1,15 +1,13 @@
-[action-image]: https://github.com/cezaraugusto/go-git-it/workflows/CI/badge.svg
+[npm-version-image]: https://img.shields.io/npm/v/go-git-it.svg?color=0971fe
+[npm-version-url]: https://www.npmjs.com/package/go-git-it
+[npm-downloads-image]: https://img.shields.io/npm/dm/go-git-it.svg?color=2ecc40
+[npm-downloads-url]: https://www.npmjs.com/package/go-git-it
+[action-image]: https://github.com/cezaraugusto/go-git-it/actions/workflows/ci.yml/badge.svg?branch=main
 [action-url]: https://github.com/cezaraugusto/go-git-it/actions
-[npm-image]: https://img.shields.io/npm/v/go-git-it.svg?color=0971fe
-[npm-url]: https://npmjs.org/package/go-git-it
-[npm-downloads-image]: https://img.shields.io/npm/dm/go-git-it
-[npm-downloads-url]: https://npmjs.org/package/go-git-it
-
-[![npm][npm-image]][npm-url] [![downloads][npm-downloads-image]][npm-downloads-url] [![workflow][action-image]][action-url]
-
-# go-git-it
 
 > Download any repository or subdirectory on GitHub with support for Node.js and the CLI
+
+# go-git-it [![Version][npm-version-image]][npm-version-url] [![Downloads][npm-downloads-image]][npm-downloads-url] [![workflow][action-image]][action-url]
 
 ```
 npx go-git-it <url> [outputDir]
