@@ -13,7 +13,7 @@
     "types": ["node"],
     "useDefineForClassFields": true,
     "allowImportingTsExtensions": true,
-    "downlevelIteration": true
+    "rootDir": "./src"
   },
   "include": ["src"]
 }
