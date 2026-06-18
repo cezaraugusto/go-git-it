@@ -17,7 +17,7 @@ describe('cli', () => {
     vi.restoreAllMocks()
   })
 
-  test('prints help and exits with code 0', () => {
+  it('prints help and exits with code 0', () => {
     setArgv([])
 
     const exitMock = vi
@@ -33,7 +33,7 @@ describe('cli', () => {
     expect(logMock).toHaveBeenCalled()
   })
 
-  test('rejects invalid argument counts', () => {
+  it('rejects invalid argument counts', () => {
     setArgv(['one', 'two', 'three'])
 
     const exitMock = vi
@@ -49,7 +49,7 @@ describe('cli', () => {
     expect(errorMock).toHaveBeenCalled()
   })
 
-  test('invokes goGitIt with provided arguments', async () => {
+  it('invokes goGitIt with provided arguments', async () => {
     setArgv(['https://github.com/owner/repo', './out'])
 
     const exitMock = vi.spyOn(process, 'exit')
@@ -65,7 +65,7 @@ describe('cli', () => {
     expect(exitMock).not.toHaveBeenCalled()
   })
 
-  test('prints error and exits on failure', async () => {
+  it('prints error and exits on failure', async () => {
     setArgv(['https://github.com/owner/repo'])
 
     const exitMock = vi
@@ -87,14 +87,14 @@ describe('cli', () => {
 })
 
 describe('shouldRunAsCli', () => {
-  test('returns true for direct absolute entry path', () => {
+  it('returns true for direct absolute entry path', () => {
     const entryPath = path.join(process.cwd(), 'dist', 'index.js')
     const importMetaUrl = pathToFileURL(entryPath).href
 
     expect(shouldRunAsCli(importMetaUrl, entryPath)).toBe(true)
   })
 
-  test('returns true for relative entry path', () => {
+  it('returns true for relative entry path', () => {
     const entryPath = path.join(process.cwd(), 'dist', 'index.js')
     const importMetaUrl = pathToFileURL(entryPath).href
     const relativePath = path.relative(process.cwd(), entryPath)
@@ -102,19 +102,19 @@ describe('shouldRunAsCli', () => {
     expect(shouldRunAsCli(importMetaUrl, relativePath)).toBe(true)
   })
 
-  test('returns true for binary name', () => {
+  it('returns true for binary name', () => {
     const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href
 
     expect(shouldRunAsCli(importMetaUrl, 'go-git-it')).toBe(true)
   })
 
-  test('returns false for unrelated argv1', () => {
+  it('returns false for unrelated argv1', () => {
     const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href
 
     expect(shouldRunAsCli(importMetaUrl, '/usr/bin/node')).toBe(false)
   })
 
-  test('returns false when argv1 is missing', () => {
+  it('returns false when argv1 is missing', () => {
     const importMetaUrl = pathToFileURL('/tmp/fake/index.js').href
 
     expect(shouldRunAsCli(importMetaUrl, undefined)).toBe(false)

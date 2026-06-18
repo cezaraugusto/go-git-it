@@ -41,7 +41,7 @@ describe('go-git-it', () => {
       }
     })
 
-    test('works with default path (git clone behavior)', async () => {
+    it('works with default path (git clone behavior)', async () => {
       await goGitIt(repoURL)
       // Should create 'extension.js' folder in current directory (like git clone)
       const pathName = path.resolve(__dirname, 'extension.js')
@@ -49,7 +49,7 @@ describe('go-git-it', () => {
       await expect(fs.access(pathName)).resolves.not.toThrow()
     })
 
-    test('works with custom directory name (git clone behavior)', async () => {
+    it('works with custom directory name (git clone behavior)', async () => {
       await goGitIt(repoURL, './my-browser-extension')
       // Should create 'extension.js' folder inside 'my-browser-extension' directory (like git clone)
       const pathName = path.resolve(
@@ -87,14 +87,14 @@ describe('go-git-it', () => {
       }
     })
 
-    test('works with default path', async () => {
+    it('works with default path', async () => {
       await goGitIt(fileURL)
       const pathName = path.resolve(__dirname, 'ci.yml')
 
       await expect(fs.access(pathName)).resolves.not.toThrow()
     })
 
-    test('works with a custom path', async () => {
+    it('works with a custom path', async () => {
       await goGitIt(fileURL, customPath)
       const pathName = path.resolve(customPath, 'ci.yml')
 
@@ -127,14 +127,14 @@ describe('go-git-it', () => {
       }
     })
 
-    test('works with default path', async () => {
+    it('works with default path', async () => {
       await goGitIt(folderURL)
       const pathName = path.resolve(__dirname, 'workflows')
 
       await expect(fs.access(pathName)).resolves.not.toThrow()
     })
 
-    test('works with a custom path', async () => {
+    it('works with a custom path', async () => {
       await goGitIt(folderURL, customPath)
       const pathName = path.resolve(customPath, 'workflows')
 
