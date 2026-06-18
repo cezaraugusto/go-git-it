@@ -104,6 +104,15 @@ Type: `string`
 
 Adds a custom text message instead of default config. This option overrides the success message as well.
 
+## Related projects
+
+* [pintor](https://github.com/cezaraugusto/pintor)
+* [log-md](https://github.com/cezaraugusto/log-md)
+* [mklicense](https://github.com/cezaraugusto/mklicense)
+* [prefers-yarn](https://github.com/cezaraugusto/prefers-yarn)
+* [git-precision](https://github.com/cezaraugusto/git-precision)
+* [isolated-deps](https://github.com/cezaraugusto/isolated-deps)
+
 ## License
 
 MIT (c) Cezar Augusto.
