@@ -43,7 +43,7 @@ npx go-git-it https://github.com/extension-js/extension.js ./my-browser-extensio
 
 ### Installation
 
-```
+```bash
 npm install go-git-it
 ```
 
