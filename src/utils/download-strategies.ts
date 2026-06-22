@@ -20,16 +20,13 @@ export async function downloadFullRepository (
 ): Promise<void> {
   const projectPath = path.join(outputDirectory, data.project)
 
-  // Create project directory
   await createDirectory(projectPath)
 
   try {
-    // Initialize git repository
     await executeGitCommand(['init', '--quiet'], {
       cwd: projectPath
     })
 
-    // Add remote origin
     await executeGitCommand(
       ['remote', 'add', 'origin', `https://github.com/${data.owner}/${data.project}`],
       {cwd: projectPath}
@@ -64,7 +61,6 @@ export async function downloadFullRepository (
     // Clean up .git directory to match git clone behavior when not needed
     await cleanupGitDirectory(projectPath)
   } catch (error) {
-    // Clean up on failure
     await removeDirectory(projectPath)
     throw error
   }
@@ -76,23 +72,19 @@ export async function downloadPartialRepository (
   tempDir: string
 ): Promise<void> {
   try {
-    // Initialize git repository in temp directory
     await executeGitCommand(['init', '--quiet'], {
       cwd: tempDir
     })
 
-    // Add remote origin
     await executeGitCommand(
       ['remote', 'add', 'origin', `https://github.com/${data.owner}/${data.project}`],
       {cwd: tempDir}
     )
 
-    // Enable sparse checkout
     await executeGitCommand(['config', 'core.sparseCheckout', 'true'], {
       cwd: tempDir
     })
 
-    // Set up sparse checkout pattern
     const sparseCheckoutPath = path.join(
       tempDir,
       '.git',
@@ -132,12 +124,10 @@ export async function downloadPartialRepository (
       )
     }
 
-    // Move the downloaded content to final destination
     const sourcePath = path.join(tempDir, data.filePath)
     const outputName = path.basename(data.filePath)
     const destinationPath = path.join(outputDirectory, outputName)
 
-    // Ensure source exists
     if (!(await pathExists(sourcePath))) {
       throw new Error(`Content not found at path: ${data.filePath}`)
     }

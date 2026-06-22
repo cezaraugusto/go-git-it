@@ -22,30 +22,24 @@ import {
 import cli, {shouldRunAsCli} from './cli.js'
 
 /**
- * Enhanced GitHub content downloader with git clone compatible behavior
+ * GitHub content downloader with git clone compatible behavior
  */
 async function cloneRemote (
   outputDirectory: string,
   gitUrl: string
 ): Promise<void> {
-  // Validate git availability first
   await validateGitAvailability()
 
-  // Parse the GitHub URL
   const urlData = parseGitHubUrl(gitUrl)
 
-  // Test GitHub connectivity
   await testGitHubConnectivity(urlData.owner, urlData.project)
 
-  // Create unique temporary directory
   const tempDirName = generateTempDirName()
   const tempDir = path.join(outputDirectory, tempDirName)
 
   try {
-    // Create temporary directory
     await createDirectory(tempDir)
 
-    // Choose appropriate download strategy
     if (urlData.isReleaseAsset) {
       await downloadReleaseAsset(outputDirectory, urlData, tempDir)
     } else if (urlData.isMainRepo) {
@@ -54,7 +48,6 @@ async function cloneRemote (
       await downloadPartialRepository(outputDirectory, urlData, tempDir)
     }
   } finally {
-    // Always cleanup temporary directory
     await cleanupTempDirectory(tempDir)
   }
 }
@@ -67,21 +60,17 @@ async function goGitIt (
   outputDirectory?: string,
   progressText?: string
 ): Promise<void> {
-  // Validate GitHub URL
   if (!isValidGitHubUrl(gitURL)) {
     throw new Error(
       'Invalid GitHub URL. Please provide a valid GitHub repository URL.'
     )
   }
 
-  // Parse URL to get expected output info
   const urlData = parseGitHubUrl(gitURL)
   const outputName = getOutputDirectoryName(urlData)
 
-  // Output directory defaults to current working directory (like git clone)
   const outDir = outputDirectory || process.cwd()
 
-  // Ensure output directory exists
   await createDirectory(outDir)
 
   const remoteSource = `${urlData.owner}/${urlData.project}`
@@ -93,7 +82,6 @@ async function goGitIt (
     await cloneRemote(outDir, gitURL)
   })
 
-  // Success message with final path (matching git clone behavior)
   const finalPath = path.join(outDir, outputName)
 
   if (!progressText) {

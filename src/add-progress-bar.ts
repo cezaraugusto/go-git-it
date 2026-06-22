@@ -30,23 +30,18 @@ export default async function addProgressBar (
       bar.tick(chunk)
 
       if (progress >= contentLength || bar.complete) {
-        // Clear interval when progress is complete
         clearInterval(timer)
       }
     }, 50)
 
-    // Execute the completion callback
     completionCallback()
       .then(() => {
-        // Ensure the interval is cleared after operation completes
         clearInterval(timer)
 
-        // Force-complete the progress bar
         bar.tick(contentLength)
         resolve()
       })
       .catch((error) => {
-        // Ensure the interval is cleared in case of error
         clearInterval(timer)
 
         if (!isGoGitItSilentError(error)) {
