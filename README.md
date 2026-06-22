@@ -4,10 +4,12 @@
 [npm-downloads-url]: https://www.npmjs.com/package/go-git-it
 [action-image]: https://github.com/cezaraugusto/go-git-it/actions/workflows/ci.yml/badge.svg?branch=main
 [action-url]: https://github.com/cezaraugusto/go-git-it/actions
+[provenance-image]: https://img.shields.io/badge/provenance-verified-0971fe?logo=npm&logoColor=white
+[provenance-url]: https://www.npmjs.com/package/go-git-it
 
 > Download any repository or subdirectory on GitHub with support for Node.js and the CLI
 
-# go-git-it [![Version][npm-version-image]][npm-version-url] [![Downloads][npm-downloads-image]][npm-downloads-url] [![workflow][action-image]][action-url]
+# go-git-it [![Version][npm-version-image]][npm-version-url] [![Downloads][npm-downloads-image]][npm-downloads-url] [![workflow][action-image]][action-url] [![provenance][provenance-image]][provenance-url]
 
 ```
 npx go-git-it <url> [outputDir]
