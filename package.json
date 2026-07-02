@@ -55,7 +55,7 @@
   ],
   "devDependencies": {
     "@rslib/core": "^0.23.0",
-    "@types/node": "^25.9.3",
+    "@types/node": "^26.1.0",
     "@types/progress": "^2.0.7",
     "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^10.5.0",
