@@ -59,7 +59,7 @@
     "@types/progress": "^2.0.7",
     "@vitest/coverage-v8": "^4.1.9",
     "eslint": "^10.5.0",
-    "eslint-config-auditor": "^2.3.1",
+    "eslint-config-auditor": "^3.0.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
