@@ -57,7 +57,7 @@
     "@rslib/core": "^0.23.2",
     "@types/node": "^26.1.1",
     "@types/progress": "^2.0.7",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^5.0.0",
     "eslint": "^10.8.0",
     "eslint-config-auditor": "^3.0.0",
     "typescript": "^6.0.3",
